@@ -1,0 +1,305 @@
+# Audit Bundle Configuration
+# This file defines the default configuration for the BenMacha Audit Bundle
+
+audit:
+  # Global audit settings
+  enabled: true
+  
+  # Database configuration
+  database:
+    # Connection name to use for audit tables (null = default)
+    connection: null
+    
+    # Table prefix for audit tables
+    table_prefix: 'audit_'
+    
+    # Schema name (for PostgreSQL, etc.)
+    schema: null
+    
+    # Connection pool settings
+    pool:
+      min_connections: 1
+      max_connections: 10
+      idle_timeout: 300
+  
+  # Async processing configuration
+  async:
+    # Enable async processing for audit logs
+    enabled: false
+    
+    # Queue driver (doctrine, redis, rabbitmq, sqs)
+    driver: 'doctrine'
+    
+    # Queue name for audit jobs
+    queue_name: 'audit_logs'
+    
+    # Batch size for processing
+    batch_size: 100
+    
+    # Retry configuration
+    retry:
+      max_attempts: 3
+      delay: 5 # seconds
+      backoff_multiplier: 2
+  
+  # Caching configuration
+  cache:
+    # Cache driver (array, redis, memcached, filesystem)
+    driver: 'array'
+    
+    # Cache TTL in seconds
+    ttl: 3600
+    
+    # Cache key prefix
+    prefix: 'audit_'
+    
+    # Enable metadata caching
+    metadata: true
+    
+    # Enable query result caching
+    queries: false
+  
+  # Data retention settings
+  retention:
+    # Enable automatic cleanup
+    enabled: true
+    
+    # Default retention period in days (0 = keep forever)
+    default_days: 365
+    
+    # Cleanup schedule (cron expression)
+    schedule: '0 2 * * *' # Daily at 2 AM
+    
+    # Batch size for cleanup operations
+    batch_size: 1000
+    
+    # Per-entity retention settings
+    entities:
+      # Example:
+      # 'App\Entity\User': 730 # Keep user audits for 2 years
+      # 'App\Entity\Order': 2555 # Keep order audits for 7 years
+  
+  # Security and privacy settings
+  security:
+    # Enable encryption for sensitive data
+    encrypt_sensitive: true
+    
+    # Encryption algorithm
+    encryption_algorithm: 'aes-256-gcm'
+    
+    # Encryption key (should be set via environment variable)
+    encryption_key: '%env(AUDIT_ENCRYPTION_KEY)%'
+    
+    # Enable data anonymization
+    anonymize_data: false
+    
+    # Global sensitive fields (will be encrypted/anonymized)
+    sensitive_fields:
+      - 'password'
+      - 'token'
+      - 'secret'
+      - 'key'
+      - 'ssn'
+      - 'credit_card'
+      - 'bank_account'
+    
+    # IP address whitelist for audit access
+    ip_whitelist: []
+    
+    # Enable audit trail for configuration changes
+    audit_config_changes: true
+  
+  # Performance settings
+  performance:
+    # Enable query optimization
+    optimize_queries: true
+    
+    # Maximum number of changes to track per operation
+    max_changes_per_operation: 100
+    
+    # Enable bulk operations optimization
+    bulk_operations: true
+    
+    # Memory limit for large operations (in MB)
+    memory_limit: 256
+    
+    # Enable lazy loading for audit data
+    lazy_loading: true
+  
+  # Export settings
+  export:
+    # Supported formats
+    formats:
+      - 'json'
+      - 'csv'
+      - 'xml'
+      - 'excel'
+    
+    # Default format
+    default_format: 'json'
+    
+    # Maximum records per export
+    max_records: 10000
+    
+    # Include sensitive data in exports
+    include_sensitive: false
+    
+    # Export file storage path
+    storage_path: '%kernel.project_dir%/var/audit/exports'
+    
+    # Export file TTL (in seconds)
+    file_ttl: 86400 # 24 hours
+  
+  # Web interface settings
+  web:
+    # Enable web interface
+    enabled: true
+    
+    # Route prefix
+    route_prefix: '/audit'
+    
+    # Items per page
+    items_per_page: 25
+    
+    # Enable real-time updates
+    realtime: false
+    
+    # Theme settings
+    theme:
+      primary_color: '#007bff'
+      secondary_color: '#6c757d'
+      success_color: '#28a745'
+      danger_color: '#dc3545'
+      warning_color: '#ffc107'
+      info_color: '#17a2b8'
+  
+  # API settings
+  api:
+    # Enable REST API
+    enabled: true
+    
+    # API route prefix
+    route_prefix: '/api/audit'
+    
+    # API version
+    version: 'v1'
+    
+    # Enable API authentication
+    authentication: true
+    
+    # Rate limiting
+    rate_limit:
+      enabled: true
+      requests_per_minute: 60
+      requests_per_hour: 1000
+    
+    # CORS settings
+    cors:
+      enabled: false
+      allowed_origins: ['*']
+      allowed_methods: ['GET', 'POST', 'PUT', 'DELETE']
+      allowed_headers: ['Content-Type', 'Authorization']
+  
+  # Rollback settings
+  rollback:
+    # Enable rollback functionality
+    enabled: true
+    
+    # Require confirmation for rollbacks
+    require_confirmation: true
+    
+    # Maximum rollback depth (number of changes)
+    max_depth: 100
+    
+    # Enable conflict detection
+    conflict_detection: true
+    
+    # Backup before rollback
+    create_backup: true
+    
+    # Rollback timeout (in seconds)
+    timeout: 300
+  
+  # Notification settings
+  notifications:
+    # Enable notifications
+    enabled: false
+    
+    # Notification channels
+    channels:
+      email:
+        enabled: false
+        recipients: []
+        template: '@Audit/notifications/email.html.twig'
+      
+      slack:
+        enabled: false
+        webhook_url: '%env(SLACK_WEBHOOK_URL)%'
+        channel: '#audit-logs'
+      
+      webhook:
+        enabled: false
+        url: '%env(AUDIT_WEBHOOK_URL)%'
+        headers: {}
+    
+    # Events to notify about
+    events:
+      - 'audit.log.created'
+      - 'audit.rollback.executed'
+      - 'audit.config.changed'
+      - 'audit.error.occurred'
+  
+  # Logging settings
+  logging:
+    # Enable audit bundle logging
+    enabled: true
+    
+    # Log level (debug, info, notice, warning, error, critical, alert, emergency)
+    level: 'info'
+    
+    # Log channel
+    channel: 'audit'
+    
+    # Log file path
+    file: '%kernel.logs_dir%/audit.log'
+    
+    # Enable performance logging
+    performance: false
+  
+  # Entity configuration defaults
+  entities:
+    # Default settings for all auditable entities
+    defaults:
+      enabled: true
+      operations: ['create', 'update', 'delete']
+      ignored_fields: ['updatedAt', 'createdAt']
+      track_changes: true
+      max_logs: 0 # 0 = unlimited
+      async: false
+    
+    # Per-entity configuration
+    # Example:
+    # 'App\Entity\User':
+    #   enabled: true
+    #   operations: ['create', 'update']
+    #   ignored_fields: ['password', 'lastLogin']
+    #   sensitive_fields: ['email', 'phone']
+    #   max_logs: 1000
+    #   retention_days: 730
+  
+  # Development settings
+  dev:
+    # Enable debug mode
+    debug: '%kernel.debug%'
+    
+    # Show debug toolbar
+    toolbar: '%kernel.debug%'
+    
+    # Enable profiler
+    profiler: '%kernel.debug%'
+    
+    # Fake data generation for testing
+    fake_data: false
+    
+    # Test mode settings
+    test_mode: false

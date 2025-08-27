@@ -1,0 +1,513 @@
+# Validation Configuration
+
+# AuditLog Entity Validation
+BenMacha\AuditBundle\Entity\AuditLog:
+  properties:
+    entityClass:
+      - NotBlank:
+          message: 'Entity class cannot be blank'
+      - Length:
+          max: 255
+          maxMessage: 'Entity class cannot be longer than {{ limit }} characters'
+      - Regex:
+          pattern: '/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff\\]*$/'  
+          message: 'Entity class must be a valid PHP class name'
+    
+    entityId:
+      - NotBlank:
+          message: 'Entity ID cannot be blank'
+      - Length:
+          max: 255
+          maxMessage: 'Entity ID cannot be longer than {{ limit }} characters'
+    
+    operation:
+      - NotBlank:
+          message: 'Operation cannot be blank'
+      - Choice:
+          choices: ['create', 'update', 'delete']
+          message: 'Operation must be one of: create, update, delete'
+    
+    userId:
+      - Length:
+          max: 255
+          maxMessage: 'User ID cannot be longer than {{ limit }} characters'
+    
+    username:
+      - Length:
+          max: 255
+          maxMessage: 'Username cannot be longer than {{ limit }} characters'
+    
+    userRoles:
+      - Type:
+          type: array
+          message: 'User roles must be an array'
+    
+    ipAddress:
+      - Ip:
+          message: 'IP address must be valid'
+    
+    userAgent:
+      - Length:
+          max: 1000
+          maxMessage: 'User agent cannot be longer than {{ limit }} characters'
+    
+    url:
+      - Length:
+          max: 2000
+          maxMessage: 'URL cannot be longer than {{ limit }} characters'
+      - Url:
+          message: 'URL must be valid'
+    
+    route:
+      - Length:
+          max: 255
+          maxMessage: 'Route cannot be longer than {{ limit }} characters'
+    
+    method:
+      - Choice:
+          choices: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS']
+          message: 'HTTP method must be valid'
+    
+    oldValues:
+      - Type:
+          type: array
+          message: 'Old values must be an array'
+    
+    newValues:
+      - Type:
+          type: array
+          message: 'New values must be an array'
+    
+    changedFields:
+      - Type:
+          type: array
+          message: 'Changed fields must be an array'
+    
+    metadata:
+      - Type:
+          type: array
+          message: 'Metadata must be an array'
+    
+    version:
+      - Type:
+          type: integer
+          message: 'Version must be an integer'
+      - GreaterThanOrEqual:
+          value: 1
+          message: 'Version must be at least 1'
+    
+    createdAt:
+      - NotNull:
+          message: 'Created date cannot be null'
+      - DateTime:
+          message: 'Created date must be a valid datetime'
+
+# AuditChange Entity Validation
+BenMacha\AuditBundle\Entity\AuditChange:
+  properties:
+    fieldName:
+      - NotBlank:
+          message: 'Field name cannot be blank'
+      - Length:
+          max: 255
+          maxMessage: 'Field name cannot be longer than {{ limit }} characters'
+    
+    fieldType:
+      - Length:
+          max: 100
+          maxMessage: 'Field type cannot be longer than {{ limit }} characters'
+    
+    oldValue:
+      - Length:
+          max: 65535
+          maxMessage: 'Old value cannot be longer than {{ limit }} characters'
+    
+    newValue:
+      - Length:
+          max: 65535
+          maxMessage: 'New value cannot be longer than {{ limit }} characters'
+    
+    auditLog:
+      - NotNull:
+          message: 'Audit log cannot be null'
+
+# AuditConfig Entity Validation
+BenMacha\AuditBundle\Entity\AuditConfig:
+  properties:
+    configKey:
+      - NotBlank:
+          message: 'Config key cannot be blank'
+      - Length:
+          max: 255
+          maxMessage: 'Config key cannot be longer than {{ limit }} characters'
+      - Regex:
+          pattern: '/^[a-zA-Z0-9_\.\-]+$/'  
+          message: 'Config key can only contain letters, numbers, dots, underscores and hyphens'
+    
+    configValue:
+      - Length:
+          max: 65535
+          maxMessage: 'Config value cannot be longer than {{ limit }} characters'
+    
+    description:
+      - Length:
+          max: 1000
+          maxMessage: 'Description cannot be longer than {{ limit }} characters'
+    
+    category:
+      - Length:
+          max: 100
+          maxMessage: 'Category cannot be longer than {{ limit }} characters'
+    
+    isSystem:
+      - Type:
+          type: bool
+          message: 'Is system must be a boolean'
+    
+    isActive:
+      - Type:
+          type: bool
+          message: 'Is active must be a boolean'
+
+# EntityConfig Entity Validation
+BenMacha\AuditBundle\Entity\EntityConfig:
+  properties:
+    entityClass:
+      - NotBlank:
+          message: 'Entity class cannot be blank'
+      - Length:
+          max: 255
+          maxMessage: 'Entity class cannot be longer than {{ limit }} characters'
+      - Regex:
+          pattern: '/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff\\]*$/'  
+          message: 'Entity class must be a valid PHP class name'
+    
+    isEnabled:
+      - Type:
+          type: bool
+          message: 'Is enabled must be a boolean'
+    
+    operations:
+      - Type:
+          type: array
+          message: 'Operations must be an array'
+      - All:
+          - Choice:
+              choices: ['create', 'update', 'delete']
+              message: 'Each operation must be one of: create, update, delete'
+    
+    ignoredFields:
+      - Type:
+          type: array
+          message: 'Ignored fields must be an array'
+      - All:
+          - Type:
+              type: string
+              message: 'Each ignored field must be a string'
+          - Length:
+              max: 255
+              maxMessage: 'Field name cannot be longer than {{ limit }} characters'
+    
+    trackChanges:
+      - Type:
+          type: bool
+          message: 'Track changes must be a boolean'
+    
+    maxLogs:
+      - Type:
+          type: integer
+          message: 'Max logs must be an integer'
+      - GreaterThanOrEqual:
+          value: 0
+          message: 'Max logs must be 0 or greater (0 = unlimited)'
+    
+    sensitiveFields:
+      - Type:
+          type: array
+          message: 'Sensitive fields must be an array'
+      - All:
+          - Type:
+              type: string
+              message: 'Each sensitive field must be a string'
+          - Length:
+              max: 255
+              maxMessage: 'Field name cannot be longer than {{ limit }} characters'
+    
+    customAuditTable:
+      - Length:
+          max: 255
+          maxMessage: 'Custom audit table cannot be longer than {{ limit }} characters'
+      - Regex:
+          pattern: '/^[a-zA-Z_][a-zA-Z0-9_]*$/'  
+          message: 'Custom audit table must be a valid table name'
+    
+    asyncProcessing:
+      - Type:
+          type: bool
+          message: 'Async processing must be a boolean'
+    
+    metadata:
+      - Type:
+          type: array
+          message: 'Metadata must be an array'
+
+# RollbackHistory Entity Validation
+BenMacha\AuditBundle\Entity\RollbackHistory:
+  properties:
+    entityClass:
+      - NotBlank:
+          message: 'Entity class cannot be blank'
+      - Length:
+          max: 255
+          maxMessage: 'Entity class cannot be longer than {{ limit }} characters'
+    
+    entityId:
+      - NotBlank:
+          message: 'Entity ID cannot be blank'
+      - Length:
+          max: 255
+          maxMessage: 'Entity ID cannot be longer than {{ limit }} characters'
+    
+    rollbackType:
+      - NotBlank:
+          message: 'Rollback type cannot be blank'
+      - Choice:
+          choices: ['single', 'bulk', 'to_date', 'entity_history']
+          message: 'Rollback type must be one of: single, bulk, to_date, entity_history'
+    
+    status:
+      - NotBlank:
+          message: 'Status cannot be blank'
+      - Choice:
+          choices: ['pending', 'success', 'failed', 'cancelled']
+          message: 'Status must be one of: pending, success, failed, cancelled'
+    
+    userId:
+      - Length:
+          max: 255
+          maxMessage: 'User ID cannot be longer than {{ limit }} characters'
+    
+    username:
+      - Length:
+          max: 255
+          maxMessage: 'Username cannot be longer than {{ limit }} characters'
+    
+    originalAuditLogId:
+      - Type:
+          type: integer
+          message: 'Original audit log ID must be an integer'
+      - GreaterThan:
+          value: 0
+          message: 'Original audit log ID must be greater than 0'
+    
+    newAuditLogId:
+      - Type:
+          type: integer
+          message: 'New audit log ID must be an integer'
+      - GreaterThan:
+          value: 0
+          message: 'New audit log ID must be greater than 0'
+    
+    changesApplied:
+      - Type:
+          type: array
+          message: 'Changes applied must be an array'
+    
+    errorMessage:
+      - Length:
+          max: 2000
+          maxMessage: 'Error message cannot be longer than {{ limit }} characters'
+    
+    metadata:
+      - Type:
+          type: array
+          message: 'Metadata must be an array'
+    
+    executedAt:
+      - DateTime:
+          message: 'Executed date must be a valid datetime'
+    
+    duration:
+      - Type:
+          type: float
+          message: 'Duration must be a number'
+      - GreaterThanOrEqual:
+          value: 0
+          message: 'Duration must be 0 or greater'
+
+# Form Validation Groups
+BenMacha\AuditBundle\Form\Type\AuditLogFilterType:
+  properties:
+    entityClass:
+      - Length:
+          max: 255
+          maxMessage: 'Entity class cannot be longer than {{ limit }} characters'
+    
+    operation:
+      - Choice:
+          choices: ['create', 'update', 'delete']
+          message: 'Operation must be one of: create, update, delete'
+    
+    userId:
+      - Length:
+          max: 255
+          maxMessage: 'User ID cannot be longer than {{ limit }} characters'
+    
+    username:
+      - Length:
+          max: 255
+          maxMessage: 'Username cannot be longer than {{ limit }} characters'
+    
+    dateFrom:
+      - DateTime:
+          message: 'Date from must be a valid datetime'
+    
+    dateTo:
+      - DateTime:
+          message: 'Date to must be a valid datetime'
+      - GreaterThan:
+          propertyPath: dateFrom
+          message: 'Date to must be after date from'
+    
+    ipAddress:
+      - Ip:
+          message: 'IP address must be valid'
+
+BenMacha\AuditBundle\Form\Type\EntityConfigType:
+  properties:
+    entityClass:
+      - NotBlank:
+          message: 'Entity class cannot be blank'
+      - Length:
+          max: 255
+          maxMessage: 'Entity class cannot be longer than {{ limit }} characters'
+    
+    operations:
+      - Count:
+          min: 1
+          minMessage: 'At least one operation must be selected'
+    
+    maxLogs:
+      - Type:
+          type: integer
+          message: 'Max logs must be an integer'
+      - GreaterThanOrEqual:
+          value: 0
+          message: 'Max logs must be 0 or greater'
+
+BenMacha\AuditBundle\Form\Type\RollbackType:
+  properties:
+    auditLogId:
+      - NotBlank:
+          message: 'Audit log ID cannot be blank'
+      - Type:
+          type: integer
+          message: 'Audit log ID must be an integer'
+      - GreaterThan:
+          value: 0
+          message: 'Audit log ID must be greater than 0'
+    
+    confirmRollback:
+      - IsTrue:
+          message: 'You must confirm the rollback operation'
+
+BenMacha\AuditBundle\Form\Type\BulkRollbackType:
+  properties:
+    auditLogIds:
+      - NotBlank:
+          message: 'At least one audit log must be selected'
+      - Type:
+          type: array
+          message: 'Audit log IDs must be an array'
+      - Count:
+          min: 1
+          minMessage: 'At least one audit log must be selected'
+      - All:
+          - Type:
+              type: integer
+              message: 'Each audit log ID must be an integer'
+          - GreaterThan:
+              value: 0
+              message: 'Each audit log ID must be greater than 0'
+    
+    confirmBulkRollback:
+      - IsTrue:
+          message: 'You must confirm the bulk rollback operation'
+
+BenMacha\AuditBundle\Form\Type\RollbackToDateType:
+  properties:
+    entityClass:
+      - NotBlank:
+          message: 'Entity class cannot be blank'
+    
+    entityId:
+      - NotBlank:
+          message: 'Entity ID cannot be blank'
+    
+    rollbackDate:
+      - NotBlank:
+          message: 'Rollback date cannot be blank'
+      - DateTime:
+          message: 'Rollback date must be a valid datetime'
+      - LessThan:
+          value: 'now'
+          message: 'Rollback date must be in the past'
+    
+    confirmRollback:
+      - IsTrue:
+          message: 'You must confirm the rollback operation'
+
+# API Request Validation
+BenMacha\AuditBundle\Dto\AuditLogSearchRequest:
+  properties:
+    page:
+      - Type:
+          type: integer
+          message: 'Page must be an integer'
+      - GreaterThan:
+          value: 0
+          message: 'Page must be greater than 0'
+    
+    limit:
+      - Type:
+          type: integer
+          message: 'Limit must be an integer'
+      - Range:
+          min: 1
+          max: 1000
+          minMessage: 'Limit must be at least {{ min }}'
+          maxMessage: 'Limit cannot be more than {{ max }}'
+    
+    sortBy:
+      - Choice:
+          choices: ['id', 'createdAt', 'entityClass', 'operation', 'userId']
+          message: 'Sort by must be one of: id, createdAt, entityClass, operation, userId'
+    
+    sortOrder:
+      - Choice:
+          choices: ['asc', 'desc']
+          message: 'Sort order must be asc or desc'
+
+BenMacha\AuditBundle\Dto\ExportRequest:
+  properties:
+    format:
+      - NotBlank:
+          message: 'Export format cannot be blank'
+      - Choice:
+          choices: ['json', 'csv', 'xml', 'excel']
+          message: 'Export format must be one of: json, csv, xml, excel'
+    
+    filters:
+      - Type:
+          type: array
+          message: 'Filters must be an array'
+    
+    includeChanges:
+      - Type:
+          type: bool
+          message: 'Include changes must be a boolean'
+    
+    includeMetadata:
+      - Type:
+          type: bool
+          message: 'Include metadata must be a boolean'

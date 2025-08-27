@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="CLI Arguments" tests="110" assertions="87" errors="87" failures="7" skipped="0" time="0.035584">
+    <testsuite name="BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php" tests="12" assertions="0" errors="12" failures="0" skipped="0" time="0.000000">
+      <testcase name="testGetAuditLogsWithDefaultParameters" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php" line="46" class="BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest" classname="BenMacha.AuditBundle.Tests.Integration.Controller.AuditApiControllerTest" assertions="0" time="0.000000">
+        <error type="PHPUnit\Framework\MockObject\Generator\UnknownTypeException">BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest::testGetAuditLogsWithDefaultParameters
+PHPUnit\Framework\MockObject\Generator\UnknownTypeException: Class or interface "Symfony\Component\Security\Core\Security" does not exist
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php:35</error>
+      </testcase>
+      <testcase name="testGetAuditLogsWithCustomParameters" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php" line="75" class="BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest" classname="BenMacha.AuditBundle.Tests.Integration.Controller.AuditApiControllerTest" assertions="0" time="0.000000">
+        <error type="PHPUnit\Framework\MockObject\Generator\UnknownTypeException">BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest::testGetAuditLogsWithCustomParameters
+PHPUnit\Framework\MockObject\Generator\UnknownTypeException: Class or interface "Symfony\Component\Security\Core\Security" does not exist
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php:35</error>
+      </testcase>
+      <testcase name="testGetAuditLogsWithInvalidPage" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php" line="103" class="BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest" classname="BenMacha.AuditBundle.Tests.Integration.Controller.AuditApiControllerTest" assertions="0" time="0.000000">
+        <error type="PHPUnit\Framework\MockObject\Generator\UnknownTypeException">BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest::testGetAuditLogsWithInvalidPage
+PHPUnit\Framework\MockObject\Generator\UnknownTypeException: Class or interface "Symfony\Component\Security\Core\Security" does not exist
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php:35</error>
+      </testcase>
+      <testcase name="testGetAuditLogsWithInvalidLimit" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php" line="118" class="BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest" classname="BenMacha.AuditBundle.Tests.Integration.Controller.AuditApiControllerTest" assertions="0" time="0.000000">
+        <error type="PHPUnit\Framework\MockObject\Generator\UnknownTypeException">BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest::testGetAuditLogsWithInvalidLimit
+PHPUnit\Framework\MockObject\Generator\UnknownTypeException: Class or interface "Symfony\Component\Security\Core\Security" does not exist
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php:35</error>
+      </testcase>
+      <testcase name="testGetAuditLogById" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php" line="133" class="BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest" classname="BenMacha.AuditBundle.Tests.Integration.Controller.AuditApiControllerTest" assertions="0" time="0.000000">
+        <error type="PHPUnit\Framework\MockObject\Generator\UnknownTypeException">BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest::testGetAuditLogById
+PHPUnit\Framework\MockObject\Generator\UnknownTypeException: Class or interface "Symfony\Component\Security\Core\Security" does not exist
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php:35</error>
+      </testcase>
+      <testcase name="testGetAuditLogByIdNotFound" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php" line="159" class="BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest" classname="BenMacha.AuditBundle.Tests.Integration.Controller.AuditApiControllerTest" assertions="0" time="0.000000">
+        <error type="PHPUnit\Framework\MockObject\Generator\UnknownTypeException">BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest::testGetAuditLogByIdNotFound
+PHPUnit\Framework\MockObject\Generator\UnknownTypeException: Class or interface "Symfony\Component\Security\Core\Security" does not exist
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php:35</error>
+      </testcase>
+      <testcase name="testGetEntityAuditLogs" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php" line="179" class="BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest" classname="BenMacha.AuditBundle.Tests.Integration.Controller.AuditApiControllerTest" assertions="0" time="0.000000">
+        <error type="PHPUnit\Framework\MockObject\Generator\UnknownTypeException">BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest::testGetEntityAuditLogs
+PHPUnit\Framework\MockObject\Generator\UnknownTypeException: Class or interface "Symfony\Component\Security\Core\Security" does not exist
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php:35</error>
+      </testcase>
+      <testcase name="testGetEntityAuditLogsWithLimitAndOffset" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php" line="211" class="BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest" classname="BenMacha.AuditBundle.Tests.Integration.Controller.AuditApiControllerTest" assertions="0" time="0.000000">
+        <error type="PHPUnit\Framework\MockObject\Generator\UnknownTypeException">BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest::testGetEntityAuditLogsWithLimitAndOffset
+PHPUnit\Framework\MockObject\Generator\UnknownTypeException: Class or interface "Symfony\Component\Security\Core\Security" does not exist
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php:35</error>
+      </testcase>
+      <testcase name="testRollbackEntitySuccessful" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php" line="237" class="BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest" classname="BenMacha.AuditBundle.Tests.Integration.Controller.AuditApiControllerTest" assertions="0" time="0.000000">
+        <error type="PHPUnit\Framework\MockObject\Generator\UnknownTypeException">BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest::testRollbackEntitySuccessful
+PHPUnit\Framework\MockObject\Generator\UnknownTypeException: Class or interface "Symfony\Component\Security\Core\Security" does not exist
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php:35</error>
+      </testcase>
+      <testcase name="testRollbackEntityFailed" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php" line="264" class="BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest" classname="BenMacha.AuditBundle.Tests.Integration.Controller.AuditApiControllerTest" assertions="0" time="0.000000">
+        <error type="PHPUnit\Framework\MockObject\Generator\UnknownTypeException">BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest::testRollbackEntityFailed
+PHPUnit\Framework\MockObject\Generator\UnknownTypeException: Class or interface "Symfony\Component\Security\Core\Security" does not exist
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php:35</error>
+      </testcase>
+      <testcase name="testRollbackEntityNotFound" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php" line="291" class="BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest" classname="BenMacha.AuditBundle.Tests.Integration.Controller.AuditApiControllerTest" assertions="0" time="0.000000">
+        <error type="PHPUnit\Framework\MockObject\Generator\UnknownTypeException">BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest::testRollbackEntityNotFound
+PHPUnit\Framework\MockObject\Generator\UnknownTypeException: Class or interface "Symfony\Component\Security\Core\Security" does not exist
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php:35</error>
+      </testcase>
+      <testcase name="testRollbackEntityWithException" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php" line="310" class="BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest" classname="BenMacha.AuditBundle.Tests.Integration.Controller.AuditApiControllerTest" assertions="0" time="0.000000">
+        <error type="PHPUnit\Framework\MockObject\Generator\UnknownTypeException">BenMacha\AuditBundle\Tests\Integration\Controller\AuditApiControllerTest::testRollbackEntityWithException
+PHPUnit\Framework\MockObject\Generator\UnknownTypeException: Class or interface "Symfony\Component\Security\Core\Security" does not exist
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditApiControllerTest.php:35</error>
+      </testcase>
+    </testsuite>
+    <testsuite name="BenMacha\AuditBundle\Tests\Integration\Controller\AuditControllerTest" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditControllerTest.php" tests="4" assertions="1" errors="3" failures="1" skipped="0" time="0.015849">
+      <testcase name="testIndexWithDefaultParameters" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditControllerTest.php" line="45" class="BenMacha\AuditBundle\Tests\Integration\Controller\AuditControllerTest" classname="BenMacha.AuditBundle.Tests.Integration.Controller.AuditControllerTest" assertions="0" time="0.010063">
+        <error type="Error">BenMacha\AuditBundle\Tests\Integration\Controller\AuditControllerTest::testIndexWithDefaultParameters
+Error: Call to undefined method BenMacha\AuditBundle\Entity\AuditLog::setChanges()
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditControllerTest.php:120
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditControllerTest.php:50</error>
+      </testcase>
+      <testcase name="testIndexWithCustomParameters" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditControllerTest.php" line="64" class="BenMacha\AuditBundle\Tests\Integration\Controller\AuditControllerTest" classname="BenMacha.AuditBundle.Tests.Integration.Controller.AuditControllerTest" assertions="0" time="0.000358">
+        <error type="Error">BenMacha\AuditBundle\Tests\Integration\Controller\AuditControllerTest::testIndexWithCustomParameters
+Error: Call to undefined method BenMacha\AuditBundle\Entity\AuditLog::setChanges()
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditControllerTest.php:120
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditControllerTest.php:74</error>
+      </testcase>
+      <testcase name="testShowExistingAuditLog" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditControllerTest.php" line="86" class="BenMacha\AuditBundle\Tests\Integration\Controller\AuditControllerTest" classname="BenMacha.AuditBundle.Tests.Integration.Controller.AuditControllerTest" assertions="0" time="0.000218">
+        <error type="Error">BenMacha\AuditBundle\Tests\Integration\Controller\AuditControllerTest::testShowExistingAuditLog
+Error: Call to undefined method BenMacha\AuditBundle\Entity\AuditLog::setChanges()
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditControllerTest.php:120
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditControllerTest.php:88</error>
+      </testcase>
+      <testcase name="testShowNonExistentAuditLog" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditControllerTest.php" line="100" class="BenMacha\AuditBundle\Tests\Integration\Controller\AuditControllerTest" classname="BenMacha.AuditBundle.Tests.Integration.Controller.AuditControllerTest" assertions="1" time="0.005210">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">BenMacha\AuditBundle\Tests\Integration\Controller\AuditControllerTest::testShowNonExistentAuditLog
+Failed asserting that exception of type "TypeError" matches expected exception "Symfony\Component\HttpKernel\Exception\NotFoundHttpException". Message was: "BenMacha\AuditBundle\Controller\AuditLogController::show(): Argument #1 ($auditLog) must be of type BenMacha\AuditBundle\Entity\AuditLog, int given, called in /Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditControllerTest.php on line 109" at
+/Users/benmecha/PhpstormProjects/audit/src/Controller/AuditLogController.php:75
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/Controller/AuditControllerTest.php:109
+.</failure>
+      </testcase>
+    </testsuite>
+    <testsuite name="BenMacha\AuditBundle\Tests\Integration\EventListener\AuditEventListenerTest" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/EventListener/AuditEventListenerTest.php" tests="10" assertions="0" errors="10" failures="0" skipped="0" time="0.007424">
+      <testcase name="testPostPersist" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/EventListener/AuditEventListenerTest.php" line="32" class="BenMacha\AuditBundle\Tests\Integration\EventListener\AuditEventListenerTest" classname="BenMacha.AuditBundle.Tests.Integration.EventListener.AuditEventListenerTest" assertions="0" time="0.004021">
+        <error type="Error">BenMacha\AuditBundle\Tests\Integration\EventListener\AuditEventListenerTest::testPostPersist
+Error: Class "Doctrine\ORM\Event\LifecycleEventArgs" not found
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/EventListener/AuditEventListenerTest.php:39</error>
+      </testcase>
+      <testcase name="testPreUpdate" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/EventListener/AuditEventListenerTest.php" line="52" class="BenMacha\AuditBundle\Tests\Integration\EventListener\AuditEventListenerTest" classname="BenMacha.AuditBundle.Tests.Integration.EventListener.AuditEventListenerTest" assertions="0" time="0.001855">
+        <error type="PHPUnit\Framework\MockObject\MethodCannotBeConfiguredException">BenMacha\AuditBundle\Tests\Integration\EventListener\AuditEventListenerTest::testPreUpdate
+PHPUnit\Framework\MockObject\MethodCannotBeConfiguredException: Trying to configure method "getEntity" which cannot be configured because it does not exist, has not been specified, is final, or is static
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/EventListener/AuditEventListenerTest.php:66</error>
+      </testcase>
+      <testcase name="testPreRemove" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/EventListener/AuditEventListenerTest.php" line="80" class="BenMacha\AuditBundle\Tests\Integration\EventListener\AuditEventListenerTest" classname="BenMacha.AuditBundle.Tests.Integration.EventListener.AuditEventListenerTest" assertions="0" time="0.000223">
+        <error type="Error">BenMacha\AuditBundle\Tests\Integration\EventListener\AuditEventListenerTest::testPreRemove
+Error: Class "Doctrine\ORM\Event\LifecycleEventArgs" not found
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/EventListener/AuditEventListenerTest.php:87</error>
+      </testcase>
+      <testcase name="testPostPersistWithException" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/EventListener/AuditEventListenerTest.php" line="100" class="BenMacha\AuditBundle\Tests\Integration\EventListener\AuditEventListenerTest" classname="BenMacha.AuditBundle.Tests.Integration.EventListener.AuditEventListenerTest" assertions="0" time="0.000189">
+        <error type="Error">BenMacha\AuditBundle\Tests\Integration\EventListener\AuditEventListenerTest::testPostPersistWithException
+Error: Class "Doctrine\ORM\Event\LifecycleEventArgs" not found
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/EventListener/AuditEventListenerTest.php:106</error>
+      </testcase>
+      <testcase name="testPreUpdateWithException" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/EventListener/AuditEventListenerTest.php" line="118" class="BenMacha\AuditBundle\Tests\Integration\EventListener\AuditEventListenerTest" classname="BenMacha.AuditBundle.Tests.Integration.EventListener.AuditEventListenerTest" assertions="0" time="0.000205">
+        <error type="PHPUnit\Framework\MockObject\MethodCannotBeConfiguredException">BenMacha\AuditBundle\Tests\Integration\EventListener\AuditEventListenerTest::testPreUpdateWithException
+PHPUnit\Framework\MockObject\MethodCannotBeConfiguredException: Trying to configure method "getEntity" which cannot be configured because it does not exist, has not been specified, is final, or is static
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/EventListener/AuditEventListenerTest.php:125</error>
+      </testcase>
+      <testcase name="testPreRemoveWithException" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/EventListener/AuditEventListenerTest.php" line="138" class="BenMacha\AuditBundle\Tests\Integration\EventListener\AuditEventListenerTest" classname="BenMacha.AuditBundle.Tests.Integration.EventListener.AuditEventListenerTest" assertions="0" time="0.000182">
+        <error type="Error">BenMacha\AuditBundle\Tests\Integration\EventListener\AuditEventListenerTest::testPreRemoveWithException
+Error: Class "Doctrine\ORM\Event\LifecycleEventArgs" not found
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/EventListener/AuditEventListenerTest.php:144</error>
+      </testcase>
+      <testcase name="testGetSubscribedEvents" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/EventListener/AuditEventListenerTest.php" line="156" class="BenMacha\AuditBundle\Tests\Integration\EventListener\AuditEventListenerTest" classname="BenMacha.AuditBundle.Tests.Integration.EventListener.AuditEventListenerTest" assertions="0" time="0.000183">
+        <error type="Error">BenMacha\AuditBundle\Tests\Integration\EventListener\AuditEventListenerTest::testGetSubscribedEvents
+Error: Call to undefined method BenMacha\AuditBundle\EventListener\AuditEventListener::getSubscribedEvents()
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/EventListener/AuditEventListenerTest.php:158</error>
+      </testcase>
+      <testcase name="testPostPersistWithComplexEntity" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/EventListener/AuditEventListenerTest.php" line="169" class="BenMacha\AuditBundle\Tests\Integration\EventListener\AuditEventListenerTest" classname="BenMacha.AuditBundle.Tests.Integration.EventListener.AuditEventListenerTest" assertions="0" time="0.000167">
+        <error type="Error">BenMacha\AuditBundle\Tests\Integration\EventListener\AuditEventListenerTest::testPostPersistWithComplexEntity
+Error: Class "Doctrine\ORM\Event\LifecycleEventArgs" not found
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/EventListener/AuditEventListenerTest.php:183</error>
+      </testcase>
+      <testcase name="testPreUpdateWithEmptyChangeSet" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/EventListener/AuditEventListenerTest.php" line="196" class="BenMacha\AuditBundle\Tests\Integration\EventListener\AuditEventListenerTest" classname="BenMacha.AuditBundle.Tests.Integration.EventListener.AuditEventListenerTest" assertions="0" time="0.000204">
+        <error type="PHPUnit\Framework\MockObject\MethodCannotBeConfiguredException">BenMacha\AuditBundle\Tests\Integration\EventListener\AuditEventListenerTest::testPreUpdateWithEmptyChangeSet
+PHPUnit\Framework\MockObject\MethodCannotBeConfiguredException: Trying to configure method "getEntity" which cannot be configured because it does not exist, has not been specified, is final, or is static
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/EventListener/AuditEventListenerTest.php:204</error>
+      </testcase>
+      <testcase name="testPreUpdateWithSingleFieldChange" file="/Users/benmecha/PhpstormProjects/audit/tests/Integration/EventListener/AuditEventListenerTest.php" line="218" class="BenMacha\AuditBundle\Tests\Integration\EventListener\AuditEventListenerTest" classname="BenMacha.AuditBundle.Tests.Integration.EventListener.AuditEventListenerTest" assertions="0" time="0.000194">
+        <error type="PHPUnit\Framework\MockObject\MethodCannotBeConfiguredException">BenMacha\AuditBundle\Tests\Integration\EventListener\AuditEventListenerTest::testPreUpdateWithSingleFieldChange
+PHPUnit\Framework\MockObject\MethodCannotBeConfiguredException: Trying to configure method "getEntity" which cannot be configured because it does not exist, has not been specified, is final, or is static
+
+/Users/benmecha/PhpstormProjects/audit/tests/Integration/EventListener/AuditEventListenerTest.php:230</error>
+      </testcase>
+    </testsuite>
+    <testsuite name="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php" tests="17" assertions="0" errors="17" failures="0" skipped="0" time="0.003516">
+      <testcase name="testDefaultConstructor" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php" line="10" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditContextTest" assertions="0" time="0.000735">
+        <error type="ArgumentCountError">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest::testDefaultConstructor
+ArgumentCountError: Too few arguments to function BenMacha\AuditBundle\Attribute\AuditContext::__construct(), 0 passed in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php on line 12 and at least 1 expected
+
+/Users/benmecha/PhpstormProjects/audit/src/Attribute/AuditContext.php:82
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php:12</error>
+      </testcase>
+      <testcase name="testCustomConstructor" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php" line="24" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditContextTest" assertions="0" time="0.000162">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest::testCustomConstructor
+Error: Unknown named parameter $tags
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php:28</error>
+      </testcase>
+      <testcase name="testHasTag" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php" line="47" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditContextTest" assertions="0" time="0.000145">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest::testHasTag
+Error: Unknown named parameter $tags
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php:49</error>
+      </testcase>
+      <testcase name="testHasTagWithEmptyTags" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php" line="58" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditContextTest" assertions="0" time="0.000151">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest::testHasTagWithEmptyTags
+Error: Unknown named parameter $tags
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php:60</error>
+      </testcase>
+      <testcase name="testAddTag" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php" line="66" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditContextTest" assertions="0" time="0.000160">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest::testAddTag
+Error: Unknown named parameter $tags
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php:68</error>
+      </testcase>
+      <testcase name="testAddTagDuplicate" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php" line="77" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditContextTest" assertions="0" time="0.000133">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest::testAddTagDuplicate
+Error: Unknown named parameter $tags
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php:79</error>
+      </testcase>
+      <testcase name="testRemoveTag" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php" line="86" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditContextTest" assertions="0" time="0.000130">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest::testRemoveTag
+Error: Unknown named parameter $tags
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php:88</error>
+      </testcase>
+      <testcase name="testRemoveNonExistentTag" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php" line="98" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditContextTest" assertions="0" time="0.000127">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest::testRemoveNonExistentTag
+Error: Unknown named parameter $tags
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php:100</error>
+      </testcase>
+      <testcase name="testGetMetadata" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php" line="107" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditContextTest" assertions="0" time="0.000138">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest::testGetMetadata
+Error: Unknown named parameter $metadata
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php:110</error>
+      </testcase>
+      <testcase name="testSetMetadata" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php" line="118" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditContextTest" assertions="0" time="0.000155">
+        <error type="ArgumentCountError">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest::testSetMetadata
+ArgumentCountError: Too few arguments to function BenMacha\AuditBundle\Attribute\AuditContext::__construct(), 0 passed in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php on line 120 and at least 1 expected
+
+/Users/benmecha/PhpstormProjects/audit/src/Attribute/AuditContext.php:82
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php:120</error>
+      </testcase>
+      <testcase name="testSetMetadataOverwrite" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php" line="128" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditContextTest" assertions="0" time="0.000130">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest::testSetMetadataOverwrite
+Error: Unknown named parameter $metadata
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php:130</error>
+      </testcase>
+      <testcase name="testIsRelatedToEntity" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php" line="137" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditContextTest" assertions="0" time="0.000141">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest::testIsRelatedToEntity
+Error: Unknown named parameter $relatedEntities
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php:139</error>
+      </testcase>
+      <testcase name="testAddRelatedEntity" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php" line="147" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditContextTest" assertions="0" time="0.000144">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest::testAddRelatedEntity
+Error: Unknown named parameter $relatedEntities
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php:149</error>
+      </testcase>
+      <testcase name="testAddRelatedEntityDuplicate" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php" line="158" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditContextTest" assertions="0" time="0.000141">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest::testAddRelatedEntityDuplicate
+Error: Unknown named parameter $relatedEntities
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php:160</error>
+      </testcase>
+      <testcase name="testToArray" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php" line="167" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditContextTest" assertions="0" time="0.000139">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest::testToArray
+Error: Unknown named parameter $tags
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php:171</error>
+      </testcase>
+      <testcase name="testFromArray" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php" line="194" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditContextTest" assertions="0" time="0.000584">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest::testFromArray
+TypeError: BenMacha\AuditBundle\Attribute\AuditContext::__construct(): Argument #1 ($key) must be of type string, null given, called in /Users/benmecha/PhpstormProjects/audit/src/Attribute/AuditContext.php on line 292
+
+/Users/benmecha/PhpstormProjects/audit/src/Attribute/AuditContext.php:82
+/Users/benmecha/PhpstormProjects/audit/src/Attribute/AuditContext.php:292
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php:207</error>
+      </testcase>
+      <testcase name="testFromArrayWithDefaults" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php" line="219" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditContextTest" assertions="0" time="0.000202">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditContextTest::testFromArrayWithDefaults
+TypeError: BenMacha\AuditBundle\Attribute\AuditContext::__construct(): Argument #1 ($key) must be of type string, null given, called in /Users/benmecha/PhpstormProjects/audit/src/Attribute/AuditContext.php on line 292
+
+/Users/benmecha/PhpstormProjects/audit/src/Attribute/AuditContext.php:82
+/Users/benmecha/PhpstormProjects/audit/src/Attribute/AuditContext.php:292
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditContextTest.php:221</error>
+      </testcase>
+    </testsuite>
+    <testsuite name="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php" tests="17" assertions="9" errors="14" failures="3" skipped="0" time="0.004270">
+      <testcase name="testDefaultConstructor" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php" line="10" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditMetadataTest" assertions="4" time="0.001351">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest::testDefaultConstructor
+Failed asserting that null is false.
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php:17</failure>
+      </testcase>
+      <testcase name="testCustomConstructor" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php" line="25" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditMetadataTest" assertions="0" time="0.000178">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest::testCustomConstructor
+Error: Unknown named parameter $key
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php:30</error>
+      </testcase>
+      <testcase name="testIsExpired" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php" line="52" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditMetadataTest" assertions="0" time="0.000171">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest::testIsExpired
+Error: Unknown named parameter $expiresAt
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php:57</error>
+      </testcase>
+      <testcase name="testHasTag" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php" line="66" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditMetadataTest" assertions="0" time="0.000143">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest::testHasTag
+Error: Unknown named parameter $tags
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php:68</error>
+      </testcase>
+      <testcase name="testHasTagWithEmptyTags" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php" line="77" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditMetadataTest" assertions="0" time="0.000142">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest::testHasTagWithEmptyTags
+Error: Unknown named parameter $tags
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php:79</error>
+      </testcase>
+      <testcase name="testAddTag" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php" line="85" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditMetadataTest" assertions="0" time="0.000142">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest::testAddTag
+Error: Unknown named parameter $tags
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php:87</error>
+      </testcase>
+      <testcase name="testAddTagDuplicate" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php" line="96" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditMetadataTest" assertions="0" time="0.000144">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest::testAddTagDuplicate
+Error: Unknown named parameter $tags
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php:98</error>
+      </testcase>
+      <testcase name="testRemoveTag" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php" line="105" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditMetadataTest" assertions="0" time="0.000139">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest::testRemoveTag
+Error: Unknown named parameter $tags
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php:107</error>
+      </testcase>
+      <testcase name="testRemoveNonExistentTag" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php" line="117" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditMetadataTest" assertions="0" time="0.000143">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest::testRemoveNonExistentTag
+Error: Unknown named parameter $tags
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php:119</error>
+      </testcase>
+      <testcase name="testGetFormattedValue" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php" line="126" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditMetadataTest" assertions="0" time="0.000144">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest::testGetFormattedValue
+Error: Unknown named parameter $value
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php:128</error>
+      </testcase>
+      <testcase name="testGetFormattedValueWithInvalidJson" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php" line="141" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditMetadataTest" assertions="0" time="0.000148">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest::testGetFormattedValueWithInvalidJson
+Error: Unknown named parameter $value
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php:143</error>
+      </testcase>
+      <testcase name="testGetFormattedValueWithBooleanFalse" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php" line="148" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditMetadataTest" assertions="0" time="0.000145">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest::testGetFormattedValueWithBooleanFalse
+Error: Unknown named parameter $value
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php:150</error>
+      </testcase>
+      <testcase name="testShouldBeIndexed" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php" line="155" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditMetadataTest" assertions="0" time="0.000140">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest::testShouldBeIndexed
+Error: Unknown named parameter $indexed
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php:157</error>
+      </testcase>
+      <testcase name="testShouldBeEncrypted" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php" line="164" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditMetadataTest" assertions="0" time="0.000140">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest::testShouldBeEncrypted
+Error: Unknown named parameter $encrypted
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php:166</error>
+      </testcase>
+      <testcase name="testToArray" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php" line="173" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditMetadataTest" assertions="0" time="0.000226">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest::testToArray
+Error: Unknown named parameter $key
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php:178</error>
+      </testcase>
+      <testcase name="testFromArray" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php" line="204" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditMetadataTest" assertions="1" time="0.000560">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest::testFromArray
+Failed asserting that null matches expected 'from_array_key'.
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php:222</failure>
+      </testcase>
+      <testcase name="testFromArrayWithDefaults" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php" line="233" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditMetadataTest" assertions="4" time="0.000214">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditMetadataTest::testFromArrayWithDefaults
+Failed asserting that null is false.
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditMetadataTest.php:240</failure>
+      </testcase>
+    </testsuite>
+    <testsuite name="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php" tests="12" assertions="3" errors="9" failures="3" skipped="0" time="0.002265">
+      <testcase name="testDefaultConstructor" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php" line="10" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditSensitiveTest" assertions="1" time="0.000554">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest::testDefaultConstructor
+Failed asserting that null matches expected '***'.
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php:14</failure>
+      </testcase>
+      <testcase name="testCustomConstructor" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php" line="22" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditSensitiveTest" assertions="0" time="0.000158">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest::testCustomConstructor
+Error: Unknown named parameter $mask
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php:25</error>
+      </testcase>
+      <testcase name="testMaskValue" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php" line="41" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditSensitiveTest" assertions="0" time="0.000145">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest::testMaskValue
+Error: Unknown named parameter $mask
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php:43</error>
+      </testcase>
+      <testcase name="testHashValueMethod" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php" line="50" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditSensitiveTest" assertions="0" time="0.000145">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest::testHashValueMethod
+Error: Unknown named parameter $hashValue
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php:52</error>
+      </testcase>
+      <testcase name="testHashValueMethodWithDifferentAlgorithm" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php" line="61" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditSensitiveTest" assertions="0" time="0.000175">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest::testHashValueMethodWithDifferentAlgorithm
+Error: Unknown named parameter $hashValue
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php:63</error>
+      </testcase>
+      <testcase name="testCanViewOriginal" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php" line="71" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditSensitiveTest" assertions="0" time="0.000130">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest::testCanViewOriginal
+Error: Unknown named parameter $allowedRoles
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php:73</error>
+      </testcase>
+      <testcase name="testCanViewOriginalWithEmptyAllowedRoles" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php" line="82" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditSensitiveTest" assertions="0" time="0.000143">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest::testCanViewOriginalWithEmptyAllowedRoles
+Error: Unknown named parameter $allowedRoles
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php:84</error>
+      </testcase>
+      <testcase name="testProcessValue" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php" line="91" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditSensitiveTest" assertions="0" time="0.000150">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest::testProcessValue
+Error: Unknown named parameter $mask
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php:94</error>
+      </testcase>
+      <testcase name="testProcessValueWithPermission" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php" line="113" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditSensitiveTest" assertions="0" time="0.000144">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest::testProcessValueWithPermission
+Error: Unknown named parameter $mask
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php:116</error>
+      </testcase>
+      <testcase name="testToArray" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php" line="136" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditSensitiveTest" assertions="0" time="0.000139">
+        <error type="Error">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest::testToArray
+Error: Unknown named parameter $mask
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php:139</error>
+      </testcase>
+      <testcase name="testFromArray" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php" line="159" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditSensitiveTest" assertions="1" time="0.000203">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest::testFromArray
+Failed asserting that null matches expected '[FROM_ARRAY]'.
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php:172</failure>
+      </testcase>
+      <testcase name="testFromArrayWithDefaults" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php" line="180" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditSensitiveTest" assertions="1" time="0.000177">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">BenMacha\AuditBundle\Tests\Unit\Attribute\AuditSensitiveTest::testFromArrayWithDefaults
+Failed asserting that null matches expected '***'.
+
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditSensitiveTest.php:184</failure>
+      </testcase>
+    </testsuite>
+    <testsuite name="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditableTest" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditableTest.php" tests="9" assertions="49" errors="0" failures="0" skipped="0" time="0.001516">
+      <testcase name="testDefaultConstructor" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditableTest.php" line="10" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditableTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditableTest" assertions="9" time="0.001073"/>
+      <testcase name="testCustomConstructor" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditableTest.php" line="25" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditableTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditableTest" assertions="9" time="0.000064"/>
+      <testcase name="testShouldTrackOperation" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditableTest.php" line="50" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditableTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditableTest" assertions="3" time="0.000052"/>
+      <testcase name="testShouldTrackOperationWhenDisabled" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditableTest.php" line="59" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditableTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditableTest" assertions="3" time="0.000051"/>
+      <testcase name="testShouldIgnoreField" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditableTest.php" line="68" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditableTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditableTest" assertions="3" time="0.000047"/>
+      <testcase name="testIsSensitiveField" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditableTest.php" line="77" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditableTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditableTest" assertions="3" time="0.000071"/>
+      <testcase name="testToArray" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditableTest.php" line="86" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditableTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditableTest" assertions="1" time="0.000061"/>
+      <testcase name="testFromArray" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditableTest.php" line="115" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditableTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditableTest" assertions="9" time="0.000051"/>
+      <testcase name="testFromArrayWithDefaults" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/AuditableTest.php" line="142" class="BenMacha\AuditBundle\Tests\Unit\Attribute\AuditableTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.AuditableTest" assertions="9" time="0.000045"/>
+    </testsuite>
+    <testsuite name="BenMacha\AuditBundle\Tests\Unit\Attribute\IgnoreAuditTest" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/IgnoreAuditTest.php" tests="7" assertions="25" errors="0" failures="0" skipped="0" time="0.000745">
+      <testcase name="testDefaultConstructor" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/IgnoreAuditTest.php" line="10" class="BenMacha\AuditBundle\Tests\Unit\Attribute\IgnoreAuditTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.IgnoreAuditTest" assertions="4" time="0.000396"/>
+      <testcase name="testCustomConstructor" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/IgnoreAuditTest.php" line="20" class="BenMacha\AuditBundle\Tests\Unit\Attribute\IgnoreAuditTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.IgnoreAuditTest" assertions="4" time="0.000073"/>
+      <testcase name="testShouldIgnoreForOperationWhenAlways" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/IgnoreAuditTest.php" line="35" class="BenMacha\AuditBundle\Tests\Unit\Attribute\IgnoreAuditTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.IgnoreAuditTest" assertions="4" time="0.000059"/>
+      <testcase name="testShouldIgnoreForOperationWhenNotAlways" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/IgnoreAuditTest.php" line="45" class="BenMacha\AuditBundle\Tests\Unit\Attribute\IgnoreAuditTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.IgnoreAuditTest" assertions="4" time="0.000058"/>
+      <testcase name="testToArray" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/IgnoreAuditTest.php" line="58" class="BenMacha\AuditBundle\Tests\Unit\Attribute\IgnoreAuditTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.IgnoreAuditTest" assertions="1" time="0.000051"/>
+      <testcase name="testFromArray" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/IgnoreAuditTest.php" line="77" class="BenMacha\AuditBundle\Tests\Unit\Attribute\IgnoreAuditTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.IgnoreAuditTest" assertions="4" time="0.000051"/>
+      <testcase name="testFromArrayWithDefaults" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Attribute/IgnoreAuditTest.php" line="94" class="BenMacha\AuditBundle\Tests\Unit\Attribute\IgnoreAuditTest" classname="BenMacha.AuditBundle.Tests.Unit.Attribute.IgnoreAuditTest" assertions="4" time="0.000057"/>
+    </testsuite>
+    <testsuite name="BenMacha\AuditBundle\Tests\Unit\Repository\AuditLogRepositoryTest" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php" tests="7" assertions="0" errors="7" failures="0" skipped="0" time="0.000000">
+      <testcase name="testFindByEntityWithDefaults" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php" line="34" class="BenMacha\AuditBundle\Tests\Unit\Repository\AuditLogRepositoryTest" classname="BenMacha.AuditBundle.Tests.Unit.Repository.AuditLogRepositoryTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Repository\AuditLogRepositoryTest::testFindByEntityWithDefaults
+TypeError: BenMacha\AuditBundle\Repository\AuditLogRepository::__construct(): Argument #1 ($registry) must be of type Doctrine\Persistence\ManagerRegistry, MockObject_EntityManagerInterface_f756e6ee given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php on line 31
+
+/Users/benmecha/PhpstormProjects/audit/src/Repository/AuditLogRepository.php:16
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php:31</error>
+      </testcase>
+      <testcase name="testFindByEntityWithLimitAndOffset" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php" line="78" class="BenMacha\AuditBundle\Tests\Unit\Repository\AuditLogRepositoryTest" classname="BenMacha.AuditBundle.Tests.Unit.Repository.AuditLogRepositoryTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Repository\AuditLogRepositoryTest::testFindByEntityWithLimitAndOffset
+TypeError: BenMacha\AuditBundle\Repository\AuditLogRepository::__construct(): Argument #1 ($registry) must be of type Doctrine\Persistence\ManagerRegistry, MockObject_EntityManagerInterface_f756e6ee given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php on line 31
+
+/Users/benmecha/PhpstormProjects/audit/src/Repository/AuditLogRepository.php:16
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php:31</error>
+      </testcase>
+      <testcase name="testFindByEntityWithZeroLimit" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php" line="128" class="BenMacha\AuditBundle\Tests\Unit\Repository\AuditLogRepositoryTest" classname="BenMacha.AuditBundle.Tests.Unit.Repository.AuditLogRepositoryTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Repository\AuditLogRepositoryTest::testFindByEntityWithZeroLimit
+TypeError: BenMacha\AuditBundle\Repository\AuditLogRepository::__construct(): Argument #1 ($registry) must be of type Doctrine\Persistence\ManagerRegistry, MockObject_EntityManagerInterface_f756e6ee given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php on line 31
+
+/Users/benmecha/PhpstormProjects/audit/src/Repository/AuditLogRepository.php:16
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php:31</error>
+      </testcase>
+      <testcase name="testFindByEntityWithNullLimit" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php" line="149" class="BenMacha\AuditBundle\Tests\Unit\Repository\AuditLogRepositoryTest" classname="BenMacha.AuditBundle.Tests.Unit.Repository.AuditLogRepositoryTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Repository\AuditLogRepositoryTest::testFindByEntityWithNullLimit
+TypeError: BenMacha\AuditBundle\Repository\AuditLogRepository::__construct(): Argument #1 ($registry) must be of type Doctrine\Persistence\ManagerRegistry, MockObject_EntityManagerInterface_f756e6ee given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php on line 31
+
+/Users/benmecha/PhpstormProjects/audit/src/Repository/AuditLogRepository.php:16
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php:31</error>
+      </testcase>
+      <testcase name="testFindByEntityWithStringEntityId" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php" line="169" class="BenMacha\AuditBundle\Tests\Unit\Repository\AuditLogRepositoryTest" classname="BenMacha.AuditBundle.Tests.Unit.Repository.AuditLogRepositoryTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Repository\AuditLogRepositoryTest::testFindByEntityWithStringEntityId
+TypeError: BenMacha\AuditBundle\Repository\AuditLogRepository::__construct(): Argument #1 ($registry) must be of type Doctrine\Persistence\ManagerRegistry, MockObject_EntityManagerInterface_f756e6ee given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php on line 31
+
+/Users/benmecha/PhpstormProjects/audit/src/Repository/AuditLogRepository.php:16
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php:31</error>
+      </testcase>
+      <testcase name="testFindByEntityWithEmptyResult" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php" line="194" class="BenMacha\AuditBundle\Tests\Unit\Repository\AuditLogRepositoryTest" classname="BenMacha.AuditBundle.Tests.Unit.Repository.AuditLogRepositoryTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Repository\AuditLogRepositoryTest::testFindByEntityWithEmptyResult
+TypeError: BenMacha\AuditBundle\Repository\AuditLogRepository::__construct(): Argument #1 ($registry) must be of type Doctrine\Persistence\ManagerRegistry, MockObject_EntityManagerInterface_f756e6ee given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php on line 31
+
+/Users/benmecha/PhpstormProjects/audit/src/Repository/AuditLogRepository.php:16
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php:31</error>
+      </testcase>
+      <testcase name="testFindByEntityWithLargeOffset" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php" line="210" class="BenMacha\AuditBundle\Tests\Unit\Repository\AuditLogRepositoryTest" classname="BenMacha.AuditBundle.Tests.Unit.Repository.AuditLogRepositoryTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Repository\AuditLogRepositoryTest::testFindByEntityWithLargeOffset
+TypeError: BenMacha\AuditBundle\Repository\AuditLogRepository::__construct(): Argument #1 ($registry) must be of type Doctrine\Persistence\ManagerRegistry, MockObject_EntityManagerInterface_f756e6ee given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php on line 31
+
+/Users/benmecha/PhpstormProjects/audit/src/Repository/AuditLogRepository.php:16
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Repository/AuditLogRepositoryTest.php:31</error>
+      </testcase>
+    </testsuite>
+    <testsuite name="BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php" tests="15" assertions="0" errors="15" failures="0" skipped="0" time="0.000000">
+      <testcase name="testIsEntityAuditableWithConfiguredEntity" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php" line="45" class="BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest" classname="BenMacha.AuditBundle.Tests.Unit.Service.ConfigurationServiceTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest::testIsEntityAuditableWithConfiguredEntity
+TypeError: BenMacha\AuditBundle\Service\ConfigurationService::__construct(): Argument #1 ($parameterBag) must be of type Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface, MockObject_Reader_abc10922 given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php on line 39
+
+/Users/benmecha/PhpstormProjects/audit/src/Service/ConfigurationService.php:23
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php:39</error>
+      </testcase>
+      <testcase name="testIsEntityAuditableWithDisabledEntity" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php" line="63" class="BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest" classname="BenMacha.AuditBundle.Tests.Unit.Service.ConfigurationServiceTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest::testIsEntityAuditableWithDisabledEntity
+TypeError: BenMacha\AuditBundle\Service\ConfigurationService::__construct(): Argument #1 ($parameterBag) must be of type Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface, MockObject_Reader_abc10922 given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php on line 39
+
+/Users/benmecha/PhpstormProjects/audit/src/Service/ConfigurationService.php:23
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php:39</error>
+      </testcase>
+      <testcase name="testIsEntityAuditableWithAttributeEnabled" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php" line="72" class="BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest" classname="BenMacha.AuditBundle.Tests.Unit.Service.ConfigurationServiceTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest::testIsEntityAuditableWithAttributeEnabled
+TypeError: BenMacha\AuditBundle\Service\ConfigurationService::__construct(): Argument #1 ($parameterBag) must be of type Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface, MockObject_Reader_abc10922 given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php on line 39
+
+/Users/benmecha/PhpstormProjects/audit/src/Service/ConfigurationService.php:23
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php:39</error>
+      </testcase>
+      <testcase name="testIsEntityAuditableWithAttributeDisabled" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php" line="89" class="BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest" classname="BenMacha.AuditBundle.Tests.Unit.Service.ConfigurationServiceTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest::testIsEntityAuditableWithAttributeDisabled
+TypeError: BenMacha\AuditBundle\Service\ConfigurationService::__construct(): Argument #1 ($parameterBag) must be of type Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface, MockObject_Reader_abc10922 given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php on line 39
+
+/Users/benmecha/PhpstormProjects/audit/src/Service/ConfigurationService.php:23
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php:39</error>
+      </testcase>
+      <testcase name="testIsEntityAuditableWithGlobalDefault" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php" line="106" class="BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest" classname="BenMacha.AuditBundle.Tests.Unit.Service.ConfigurationServiceTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest::testIsEntityAuditableWithGlobalDefault
+TypeError: BenMacha\AuditBundle\Service\ConfigurationService::__construct(): Argument #1 ($parameterBag) must be of type Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface, MockObject_Reader_abc10922 given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php on line 39
+
+/Users/benmecha/PhpstormProjects/audit/src/Service/ConfigurationService.php:23
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php:39</error>
+      </testcase>
+      <testcase name="testShouldTrackOperationWithConfiguredEntity" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php" line="121" class="BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest" classname="BenMacha.AuditBundle.Tests.Unit.Service.ConfigurationServiceTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest::testShouldTrackOperationWithConfiguredEntity
+TypeError: BenMacha\AuditBundle\Service\ConfigurationService::__construct(): Argument #1 ($parameterBag) must be of type Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface, MockObject_Reader_abc10922 given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php on line 39
+
+/Users/benmecha/PhpstormProjects/audit/src/Service/ConfigurationService.php:23
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php:39</error>
+      </testcase>
+      <testcase name="testShouldTrackOperationWithAttribute" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php" line="130" class="BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest" classname="BenMacha.AuditBundle.Tests.Unit.Service.ConfigurationServiceTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest::testShouldTrackOperationWithAttribute
+TypeError: BenMacha\AuditBundle\Service\ConfigurationService::__construct(): Argument #1 ($parameterBag) must be of type Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface, MockObject_Reader_abc10922 given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php on line 39
+
+/Users/benmecha/PhpstormProjects/audit/src/Service/ConfigurationService.php:23
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php:39</error>
+      </testcase>
+      <testcase name="testGetIgnoredFieldsWithConfiguredEntity" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php" line="147" class="BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest" classname="BenMacha.AuditBundle.Tests.Unit.Service.ConfigurationServiceTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest::testGetIgnoredFieldsWithConfiguredEntity
+TypeError: BenMacha\AuditBundle\Service\ConfigurationService::__construct(): Argument #1 ($parameterBag) must be of type Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface, MockObject_Reader_abc10922 given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php on line 39
+
+/Users/benmecha/PhpstormProjects/audit/src/Service/ConfigurationService.php:23
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php:39</error>
+      </testcase>
+      <testcase name="testGetIgnoredFieldsWithAttribute" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php" line="156" class="BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest" classname="BenMacha.AuditBundle.Tests.Unit.Service.ConfigurationServiceTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest::testGetIgnoredFieldsWithAttribute
+TypeError: BenMacha\AuditBundle\Service\ConfigurationService::__construct(): Argument #1 ($parameterBag) must be of type Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface, MockObject_Reader_abc10922 given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php on line 39
+
+/Users/benmecha/PhpstormProjects/audit/src/Service/ConfigurationService.php:23
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php:39</error>
+      </testcase>
+      <testcase name="testGetIgnoredFieldsWithPropertyAttribute" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php" line="173" class="BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest" classname="BenMacha.AuditBundle.Tests.Unit.Service.ConfigurationServiceTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest::testGetIgnoredFieldsWithPropertyAttribute
+TypeError: BenMacha\AuditBundle\Service\ConfigurationService::__construct(): Argument #1 ($parameterBag) must be of type Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface, MockObject_Reader_abc10922 given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php on line 39
+
+/Users/benmecha/PhpstormProjects/audit/src/Service/ConfigurationService.php:23
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php:39</error>
+      </testcase>
+      <testcase name="testGetEntityConfigurationWithExistingConfig" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php" line="202" class="BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest" classname="BenMacha.AuditBundle.Tests.Unit.Service.ConfigurationServiceTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest::testGetEntityConfigurationWithExistingConfig
+TypeError: BenMacha\AuditBundle\Service\ConfigurationService::__construct(): Argument #1 ($parameterBag) must be of type Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface, MockObject_Reader_abc10922 given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php on line 39
+
+/Users/benmecha/PhpstormProjects/audit/src/Service/ConfigurationService.php:23
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php:39</error>
+      </testcase>
+      <testcase name="testGetEntityConfigurationWithGlobalDefault" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php" line="217" class="BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest" classname="BenMacha.AuditBundle.Tests.Unit.Service.ConfigurationServiceTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest::testGetEntityConfigurationWithGlobalDefault
+TypeError: BenMacha\AuditBundle\Service\ConfigurationService::__construct(): Argument #1 ($parameterBag) must be of type Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface, MockObject_Reader_abc10922 given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php on line 39
+
+/Users/benmecha/PhpstormProjects/audit/src/Service/ConfigurationService.php:23
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php:39</error>
+      </testcase>
+      <testcase name="testGetEntityConfigurationWithAttribute" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php" line="238" class="BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest" classname="BenMacha.AuditBundle.Tests.Unit.Service.ConfigurationServiceTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest::testGetEntityConfigurationWithAttribute
+TypeError: BenMacha\AuditBundle\Service\ConfigurationService::__construct(): Argument #1 ($parameterBag) must be of type Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface, MockObject_Reader_abc10922 given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php on line 39
+
+/Users/benmecha/PhpstormProjects/audit/src/Service/ConfigurationService.php:23
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php:39</error>
+      </testcase>
+      <testcase name="testIsFieldIgnoredWithIgnoreAuditAttribute" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php" line="261" class="BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest" classname="BenMacha.AuditBundle.Tests.Unit.Service.ConfigurationServiceTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest::testIsFieldIgnoredWithIgnoreAuditAttribute
+TypeError: BenMacha\AuditBundle\Service\ConfigurationService::__construct(): Argument #1 ($parameterBag) must be of type Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface, MockObject_Reader_abc10922 given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php on line 39
+
+/Users/benmecha/PhpstormProjects/audit/src/Service/ConfigurationService.php:23
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php:39</error>
+      </testcase>
+      <testcase name="testIsFieldIgnoredWithSpecificOperation" file="/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php" line="278" class="BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest" classname="BenMacha.AuditBundle.Tests.Unit.Service.ConfigurationServiceTest" assertions="0" time="0.000000">
+        <error type="TypeError">BenMacha\AuditBundle\Tests\Unit\Service\ConfigurationServiceTest::testIsFieldIgnoredWithSpecificOperation
+TypeError: BenMacha\AuditBundle\Service\ConfigurationService::__construct(): Argument #1 ($parameterBag) must be of type Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface, MockObject_Reader_abc10922 given, called in /Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php on line 39
+
+/Users/benmecha/PhpstormProjects/audit/src/Service/ConfigurationService.php:23
+/Users/benmecha/PhpstormProjects/audit/tests/Unit/Service/ConfigurationServiceTest.php:39</error>
+      </testcase>
+    </testsuite>
+  </testsuite>
+</testsuites>

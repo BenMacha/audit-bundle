@@ -1,0 +1,47 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    # API Controllers
+    BenMacha\AuditBundle\Controller\Api\AuditApiController:
+        arguments:
+            $auditLogRepository: '@BenMacha\AuditBundle\Repository\AuditLogRepository'
+            $serializer: '@serializer'
+        tags: ['controller.service_arguments']
+
+    BenMacha\AuditBundle\Controller\Api\RollbackApiController:
+        arguments:
+            $rollbackService: '@BenMacha\AuditBundle\Service\RollbackService'
+            $auditLogRepository: '@BenMacha\AuditBundle\Repository\AuditLogRepository'
+        tags: ['controller.service_arguments']
+
+    # API Services
+    BenMacha\AuditBundle\Service\Api\ApiResponseService:
+        arguments:
+            $serializer: '@serializer'
+
+    BenMacha\AuditBundle\Service\Api\RateLimitService:
+        arguments:
+            $cache: '@cache.app'
+            $config: '%audit.api%'
+
+    # Security
+    BenMacha\AuditBundle\Security\ApiKeyAuthenticator:
+        arguments:
+            $userProvider: '@security.user.provider.concrete.users'
+        tags: ['security.authenticator']
+
+    # Event Listeners
+    BenMacha\AuditBundle\EventListener\ApiRateLimitListener:
+        arguments:
+            $rateLimitService: '@BenMacha\AuditBundle\Service\Api\RateLimitService'
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, priority: 250 }
+
+    BenMacha\AuditBundle\EventListener\ApiExceptionListener:
+        arguments:
+            $logger: '@logger'
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, priority: -10 }

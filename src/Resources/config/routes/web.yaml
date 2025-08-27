@@ -1,0 +1,255 @@
+# Web Interface Routes
+
+# Dashboard
+audit_dashboard:
+  path: /
+  controller: BenMacha\AuditBundle\Controller\Web\DashboardController::index
+  methods: [GET]
+
+audit_dashboard_stats:
+  path: /stats
+  controller: BenMacha\AuditBundle\Controller\Web\DashboardController::stats
+  methods: [GET]
+
+audit_dashboard_activity:
+  path: /activity
+  controller: BenMacha\AuditBundle\Controller\Web\DashboardController::activity
+  methods: [GET]
+
+# Audit Logs
+audit_logs:
+  path: /logs
+  controller: BenMacha\AuditBundle\Controller\Web\AuditLogController::index
+  methods: [GET]
+
+audit_logs_show:
+  path: /logs/{id}
+  controller: BenMacha\AuditBundle\Controller\Web\AuditLogController::show
+  methods: [GET]
+  requirements:
+    id: '\d+'
+
+audit_logs_entity_history:
+  path: /logs/entity/{entityClass}/{entityId}
+  controller: BenMacha\AuditBundle\Controller\Web\AuditLogController::entityHistory
+  methods: [GET]
+  requirements:
+    entityId: '.+'
+
+audit_logs_user_activity:
+  path: /logs/user/{userId}
+  controller: BenMacha\AuditBundle\Controller\Web\AuditLogController::userActivity
+  methods: [GET]
+  requirements:
+    userId: '.+'
+
+audit_logs_compare:
+  path: /logs/compare
+  controller: BenMacha\AuditBundle\Controller\Web\AuditLogController::compare
+  methods: [GET, POST]
+
+audit_logs_export:
+  path: /logs/export
+  controller: BenMacha\AuditBundle\Controller\Web\AuditLogController::export
+  methods: [GET, POST]
+
+audit_logs_delete:
+  path: /logs/{id}/delete
+  controller: BenMacha\AuditBundle\Controller\Web\AuditLogController::delete
+  methods: [POST, DELETE]
+  requirements:
+    id: '\d+'
+
+audit_logs_bulk_delete:
+  path: /logs/bulk-delete
+  controller: BenMacha\AuditBundle\Controller\Web\AuditLogController::bulkDelete
+  methods: [POST]
+
+# Rollback
+audit_rollback:
+  path: /rollback
+  controller: BenMacha\AuditBundle\Controller\Web\RollbackController::index
+  methods: [GET]
+
+audit_rollback_preview:
+  path: /rollback/preview
+  controller: BenMacha\AuditBundle\Controller\Web\RollbackController::preview
+  methods: [GET, POST]
+
+audit_rollback_execute:
+  path: /rollback/execute
+  controller: BenMacha\AuditBundle\Controller\Web\RollbackController::execute
+  methods: [POST]
+
+audit_rollback_history:
+  path: /rollback/history
+  controller: BenMacha\AuditBundle\Controller\Web\RollbackController::history
+  methods: [GET]
+
+audit_rollback_history_show:
+  path: /rollback/history/{id}
+  controller: BenMacha\AuditBundle\Controller\Web\RollbackController::showHistory
+  methods: [GET]
+  requirements:
+    id: '\d+'
+
+audit_rollback_entity:
+  path: /rollback/entity/{entityClass}/{entityId}
+  controller: BenMacha\AuditBundle\Controller\Web\RollbackController::rollbackEntity
+  methods: [GET, POST]
+  requirements:
+    entityId: '.+'
+
+audit_rollback_to_date:
+  path: /rollback/to-date
+  controller: BenMacha\AuditBundle\Controller\Web\RollbackController::rollbackToDate
+  methods: [GET, POST]
+
+audit_rollback_bulk:
+  path: /rollback/bulk
+  controller: BenMacha\AuditBundle\Controller\Web\RollbackController::bulkRollback
+  methods: [POST]
+
+audit_rollback_conflicts:
+  path: /rollback/conflicts
+  controller: BenMacha\AuditBundle\Controller\Web\RollbackController::checkConflicts
+  methods: [GET, POST]
+
+audit_rollback_undo:
+  path: /rollback/{id}/undo
+  controller: BenMacha\AuditBundle\Controller\Web\RollbackController::undo
+  methods: [POST]
+  requirements:
+    id: '\d+'
+
+# Configuration
+audit_config:
+  path: /config
+  controller: BenMacha\AuditBundle\Controller\Web\ConfigurationController::index
+  methods: [GET]
+
+audit_config_save:
+  path: /config/save
+  controller: BenMacha\AuditBundle\Controller\Web\ConfigurationController::save
+  methods: [POST]
+
+audit_config_reset:
+  path: /config/reset
+  controller: BenMacha\AuditBundle\Controller\Web\ConfigurationController::reset
+  methods: [POST]
+
+audit_config_export:
+  path: /config/export
+  controller: BenMacha\AuditBundle\Controller\Web\ConfigurationController::export
+  methods: [GET]
+
+audit_config_import:
+  path: /config/import
+  controller: BenMacha\AuditBundle\Controller\Web\ConfigurationController::import
+  methods: [POST]
+
+audit_config_test:
+  path: /config/test
+  controller: BenMacha\AuditBundle\Controller\Web\ConfigurationController::test
+  methods: [GET, POST]
+
+audit_config_entities:
+  path: /config/entities
+  controller: BenMacha\AuditBundle\Controller\Web\ConfigurationController::entities
+  methods: [GET]
+
+audit_config_entity_save:
+  path: /config/entities/{id}
+  controller: BenMacha\AuditBundle\Controller\Web\ConfigurationController::saveEntity
+  methods: [POST, PUT]
+  requirements:
+    id: '\d+'
+
+audit_config_entity_delete:
+  path: /config/entities/{id}/delete
+  controller: BenMacha\AuditBundle\Controller\Web\ConfigurationController::deleteEntity
+  methods: [POST, DELETE]
+  requirements:
+    id: '\d+'
+
+audit_config_entity_toggle:
+  path: /config/entities/{id}/toggle
+  controller: BenMacha\AuditBundle\Controller\Web\ConfigurationController::toggleEntity
+  methods: [POST]
+  requirements:
+    id: '\d+'
+
+audit_config_scan_entities:
+  path: /config/scan-entities
+  controller: BenMacha\AuditBundle\Controller\Web\ConfigurationController::scanEntities
+  methods: [POST]
+
+audit_config_bulk_entities:
+  path: /config/entities/bulk
+  controller: BenMacha\AuditBundle\Controller\Web\ConfigurationController::bulkUpdateEntities
+  methods: [POST]
+
+# System Status
+audit_status:
+  path: /status
+  controller: BenMacha\AuditBundle\Controller\Web\DashboardController::status
+  methods: [GET]
+
+audit_health:
+  path: /health
+  controller: BenMacha\AuditBundle\Controller\Web\DashboardController::health
+  methods: [GET]
+
+# AJAX Endpoints for Web Interface
+audit_ajax_logs:
+  path: /ajax/logs
+  controller: BenMacha\AuditBundle\Controller\Web\AuditLogController::ajaxLogs
+  methods: [GET]
+
+audit_ajax_stats:
+  path: /ajax/stats
+  controller: BenMacha\AuditBundle\Controller\Web\DashboardController::ajaxStats
+  methods: [GET]
+
+audit_ajax_activity:
+  path: /ajax/activity
+  controller: BenMacha\AuditBundle\Controller\Web\DashboardController::ajaxActivity
+  methods: [GET]
+
+audit_ajax_system_status:
+  path: /ajax/system-status
+  controller: BenMacha\AuditBundle\Controller\Web\ConfigurationController::ajaxSystemStatus
+  methods: [GET]
+
+audit_ajax_entity_configs:
+  path: /ajax/entity-configs
+  controller: BenMacha\AuditBundle\Controller\Web\ConfigurationController::ajaxEntityConfigs
+  methods: [GET]
+
+# File Downloads
+audit_download_export:
+  path: /download/export/{filename}
+  controller: BenMacha\AuditBundle\Controller\Web\AuditLogController::downloadExport
+  methods: [GET]
+  requirements:
+    filename: '[a-zA-Z0-9_\-\.]+'
+
+audit_download_config:
+  path: /download/config/{filename}
+  controller: BenMacha\AuditBundle\Controller\Web\ConfigurationController::downloadConfig
+  methods: [GET]
+  requirements:
+    filename: '[a-zA-Z0-9_\-\.]+'
+
+# Real-time Updates (WebSocket endpoints)
+audit_realtime_logs:
+  path: /realtime/logs
+  controller: BenMacha\AuditBundle\Controller\Web\RealtimeController::logs
+  methods: [GET]
+  condition: '%audit.web.realtime%'
+
+audit_realtime_stats:
+  path: /realtime/stats
+  controller: BenMacha\AuditBundle\Controller\Web\RealtimeController::stats
+  methods: [GET]
+  condition: '%audit.web.realtime%'

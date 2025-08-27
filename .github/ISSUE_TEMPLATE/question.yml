@@ -1,0 +1,89 @@
+name: Question
+description: Ask a question about this project
+title: "[Question]: "
+labels: ["question", "triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for your interest in this project! Please ask your question below.
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: How can we get in touch with you if we need more info?
+      placeholder: ex. email@example.com
+    validations:
+      required: false
+  - type: textarea
+    id: question
+    attributes:
+      label: What is your question?
+      description: Please provide as much detail as possible to help us understand your question.
+      placeholder: I would like to know...
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add any other context about your question here. Include what you've already tried or researched.
+      placeholder: I have already tried...
+    validations:
+      required: false
+  - type: dropdown
+    id: category
+    attributes:
+      label: Question Category
+      description: What category does your question fall into?
+      options:
+        - Installation/Setup
+        - Configuration
+        - Usage/How-to
+        - Performance
+        - Integration
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: php-version
+    attributes:
+      label: PHP Version (if applicable)
+      description: What version of PHP are you using?
+      options:
+        - Not applicable
+        - 7.2
+        - 7.3
+        - 7.4
+        - 8.0
+        - 8.1
+        - 8.2
+        - 8.3
+        - 8.4
+        - Other (please specify in description)
+    validations:
+      required: false
+  - type: dropdown
+    id: symfony-version
+    attributes:
+      label: Symfony Version (if applicable)
+      description: What version of Symfony are you using?
+      options:
+        - Not applicable
+        - 5.4.x
+        - 6.4.x
+        - 7.0.x
+        - 7.1.x
+        - Other (please specify in description)
+    validations:
+      required: false
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://example.com)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

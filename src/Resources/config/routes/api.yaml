@@ -1,0 +1,388 @@
+# API Routes Configuration
+
+# Audit Logs API
+audit_api_logs:
+  path: /logs
+  controller: BenMacha\AuditBundle\Controller\Api\AuditLogApiController::index
+  methods: [GET]
+
+audit_api_logs_show:
+  path: /logs/{id}
+  controller: BenMacha\AuditBundle\Controller\Api\AuditLogApiController::show
+  methods: [GET]
+  requirements:
+    id: '\d+'
+
+audit_api_logs_create:
+  path: /logs
+  controller: BenMacha\AuditBundle\Controller\Api\AuditLogApiController::create
+  methods: [POST]
+
+audit_api_logs_update:
+  path: /logs/{id}
+  controller: BenMacha\AuditBundle\Controller\Api\AuditLogApiController::update
+  methods: [PUT, PATCH]
+  requirements:
+    id: '\d+'
+
+audit_api_logs_delete:
+  path: /logs/{id}
+  controller: BenMacha\AuditBundle\Controller\Api\AuditLogApiController::delete
+  methods: [DELETE]
+  requirements:
+    id: '\d+'
+
+audit_api_logs_bulk_delete:
+  path: /logs/bulk-delete
+  controller: BenMacha\AuditBundle\Controller\Api\AuditLogApiController::bulkDelete
+  methods: [DELETE]
+
+audit_api_logs_entity_history:
+  path: /logs/entity/{entityClass}/{entityId}
+  controller: BenMacha\AuditBundle\Controller\Api\AuditLogApiController::entityHistory
+  methods: [GET]
+  requirements:
+    entityId: '.+'
+
+audit_api_logs_user_activity:
+  path: /logs/user/{userId}
+  controller: BenMacha\AuditBundle\Controller\Api\AuditLogApiController::userActivity
+  methods: [GET]
+  requirements:
+    userId: '.+'
+
+audit_api_logs_search:
+  path: /logs/search
+  controller: BenMacha\AuditBundle\Controller\Api\AuditLogApiController::search
+  methods: [GET, POST]
+
+audit_api_logs_export:
+  path: /logs/export
+  controller: BenMacha\AuditBundle\Controller\Api\AuditLogApiController::export
+  methods: [POST]
+
+audit_api_logs_compare:
+  path: /logs/compare
+  controller: BenMacha\AuditBundle\Controller\Api\AuditLogApiController::compare
+  methods: [POST]
+
+# Audit Changes API
+audit_api_changes:
+  path: /changes
+  controller: BenMacha\AuditBundle\Controller\Api\AuditChangeApiController::index
+  methods: [GET]
+
+audit_api_changes_show:
+  path: /changes/{id}
+  controller: BenMacha\AuditBundle\Controller\Api\AuditChangeApiController::show
+  methods: [GET]
+  requirements:
+    id: '\d+'
+
+audit_api_changes_by_log:
+  path: /logs/{logId}/changes
+  controller: BenMacha\AuditBundle\Controller\Api\AuditChangeApiController::byLog
+  methods: [GET]
+  requirements:
+    logId: '\d+'
+
+# Rollback API
+audit_api_rollback_preview:
+  path: /rollback/preview
+  controller: BenMacha\AuditBundle\Controller\Api\RollbackApiController::preview
+  methods: [POST]
+
+audit_api_rollback_execute:
+  path: /rollback/execute
+  controller: BenMacha\AuditBundle\Controller\Api\RollbackApiController::execute
+  methods: [POST]
+
+audit_api_rollback_history:
+  path: /rollback/history
+  controller: BenMacha\AuditBundle\Controller\Api\RollbackApiController::history
+  methods: [GET]
+
+audit_api_rollback_history_show:
+  path: /rollback/history/{id}
+  controller: BenMacha\AuditBundle\Controller\Api\RollbackApiController::showHistory
+  methods: [GET]
+  requirements:
+    id: '\d+'
+
+audit_api_rollback_entity:
+  path: /rollback/entity/{entityClass}/{entityId}
+  controller: BenMacha\AuditBundle\Controller\Api\RollbackApiController::rollbackEntity
+  methods: [POST]
+  requirements:
+    entityId: '.+'
+
+audit_api_rollback_to_date:
+  path: /rollback/to-date
+  controller: BenMacha\AuditBundle\Controller\Api\RollbackApiController::rollbackToDate
+  methods: [POST]
+
+audit_api_rollback_bulk:
+  path: /rollback/bulk
+  controller: BenMacha\AuditBundle\Controller\Api\RollbackApiController::bulkRollback
+  methods: [POST]
+
+audit_api_rollback_conflicts:
+  path: /rollback/conflicts
+  controller: BenMacha\AuditBundle\Controller\Api\RollbackApiController::checkConflicts
+  methods: [POST]
+
+audit_api_rollback_undo:
+  path: /rollback/{id}/undo
+  controller: BenMacha\AuditBundle\Controller\Api\RollbackApiController::undo
+  methods: [POST]
+  requirements:
+    id: '\d+'
+
+# Configuration API
+audit_api_config:
+  path: /config
+  controller: BenMacha\AuditBundle\Controller\Api\ConfigurationApiController::index
+  methods: [GET]
+
+audit_api_config_update:
+  path: /config
+  controller: BenMacha\AuditBundle\Controller\Api\ConfigurationApiController::update
+  methods: [PUT, PATCH]
+
+audit_api_config_reset:
+  path: /config/reset
+  controller: BenMacha\AuditBundle\Controller\Api\ConfigurationApiController::reset
+  methods: [POST]
+
+audit_api_config_export:
+  path: /config/export
+  controller: BenMacha\AuditBundle\Controller\Api\ConfigurationApiController::export
+  methods: [GET]
+
+audit_api_config_import:
+  path: /config/import
+  controller: BenMacha\AuditBundle\Controller\Api\ConfigurationApiController::import
+  methods: [POST]
+
+audit_api_config_validate:
+  path: /config/validate
+  controller: BenMacha\AuditBundle\Controller\Api\ConfigurationApiController::validate
+  methods: [POST]
+
+audit_api_config_test:
+  path: /config/test
+  controller: BenMacha\AuditBundle\Controller\Api\ConfigurationApiController::test
+  methods: [POST]
+
+# Entity Configuration API
+audit_api_entities:
+  path: /entities
+  controller: BenMacha\AuditBundle\Controller\Api\EntityConfigApiController::index
+  methods: [GET]
+
+audit_api_entities_show:
+  path: /entities/{id}
+  controller: BenMacha\AuditBundle\Controller\Api\EntityConfigApiController::show
+  methods: [GET]
+  requirements:
+    id: '\d+'
+
+audit_api_entities_create:
+  path: /entities
+  controller: BenMacha\AuditBundle\Controller\Api\EntityConfigApiController::create
+  methods: [POST]
+
+audit_api_entities_update:
+  path: /entities/{id}
+  controller: BenMacha\AuditBundle\Controller\Api\EntityConfigApiController::update
+  methods: [PUT, PATCH]
+  requirements:
+    id: '\d+'
+
+audit_api_entities_delete:
+  path: /entities/{id}
+  controller: BenMacha\AuditBundle\Controller\Api\EntityConfigApiController::delete
+  methods: [DELETE]
+  requirements:
+    id: '\d+'
+
+audit_api_entities_toggle:
+  path: /entities/{id}/toggle
+  controller: BenMacha\AuditBundle\Controller\Api\EntityConfigApiController::toggle
+  methods: [POST]
+  requirements:
+    id: '\d+'
+
+audit_api_entities_scan:
+  path: /entities/scan
+  controller: BenMacha\AuditBundle\Controller\Api\EntityConfigApiController::scan
+  methods: [POST]
+
+audit_api_entities_bulk:
+  path: /entities/bulk
+  controller: BenMacha\AuditBundle\Controller\Api\EntityConfigApiController::bulk
+  methods: [POST]
+
+# Statistics API
+audit_api_stats:
+  path: /stats
+  controller: BenMacha\AuditBundle\Controller\Api\StatisticsApiController::index
+  methods: [GET]
+
+audit_api_stats_summary:
+  path: /stats/summary
+  controller: BenMacha\AuditBundle\Controller\Api\StatisticsApiController::summary
+  methods: [GET]
+
+audit_api_stats_activity:
+  path: /stats/activity
+  controller: BenMacha\AuditBundle\Controller\Api\StatisticsApiController::activity
+  methods: [GET]
+
+audit_api_stats_operations:
+  path: /stats/operations
+  controller: BenMacha\AuditBundle\Controller\Api\StatisticsApiController::operations
+  methods: [GET]
+
+audit_api_stats_entities:
+  path: /stats/entities
+  controller: BenMacha\AuditBundle\Controller\Api\StatisticsApiController::entities
+  methods: [GET]
+
+audit_api_stats_users:
+  path: /stats/users
+  controller: BenMacha\AuditBundle\Controller\Api\StatisticsApiController::users
+  methods: [GET]
+
+audit_api_stats_performance:
+  path: /stats/performance
+  controller: BenMacha\AuditBundle\Controller\Api\StatisticsApiController::performance
+  methods: [GET]
+
+# System API
+audit_api_system_status:
+  path: /system/status
+  controller: BenMacha\AuditBundle\Controller\Api\SystemApiController::status
+  methods: [GET]
+
+audit_api_system_health:
+  path: /system/health
+  controller: BenMacha\AuditBundle\Controller\Api\SystemApiController::health
+  methods: [GET]
+
+audit_api_system_info:
+  path: /system/info
+  controller: BenMacha\AuditBundle\Controller\Api\SystemApiController::info
+  methods: [GET]
+
+audit_api_system_version:
+  path: /system/version
+  controller: BenMacha\AuditBundle\Controller\Api\SystemApiController::version
+  methods: [GET]
+
+# Cleanup API
+audit_api_cleanup:
+  path: /cleanup
+  controller: BenMacha\AuditBundle\Controller\Api\CleanupApiController::index
+  methods: [GET]
+
+audit_api_cleanup_execute:
+  path: /cleanup/execute
+  controller: BenMacha\AuditBundle\Controller\Api\CleanupApiController::execute
+  methods: [POST]
+
+audit_api_cleanup_preview:
+  path: /cleanup/preview
+  controller: BenMacha\AuditBundle\Controller\Api\CleanupApiController::preview
+  methods: [GET]
+
+audit_api_cleanup_schedule:
+  path: /cleanup/schedule
+  controller: BenMacha\AuditBundle\Controller\Api\CleanupApiController::schedule
+  methods: [GET, POST]
+
+# Authentication API (if enabled)
+audit_api_auth_login:
+  path: /auth/login
+  controller: BenMacha\AuditBundle\Controller\Api\AuthApiController::login
+  methods: [POST]
+  condition: '%audit.api.authentication%'
+
+audit_api_auth_logout:
+  path: /auth/logout
+  controller: BenMacha\AuditBundle\Controller\Api\AuthApiController::logout
+  methods: [POST]
+  condition: '%audit.api.authentication%'
+
+audit_api_auth_refresh:
+  path: /auth/refresh
+  controller: BenMacha\AuditBundle\Controller\Api\AuthApiController::refresh
+  methods: [POST]
+  condition: '%audit.api.authentication%'
+
+audit_api_auth_me:
+  path: /auth/me
+  controller: BenMacha\AuditBundle\Controller\Api\AuthApiController::me
+  methods: [GET]
+  condition: '%audit.api.authentication%'
+
+# Webhook API
+audit_api_webhooks:
+  path: /webhooks
+  controller: BenMacha\AuditBundle\Controller\Api\WebhookApiController::index
+  methods: [GET]
+
+audit_api_webhooks_create:
+  path: /webhooks
+  controller: BenMacha\AuditBundle\Controller\Api\WebhookApiController::create
+  methods: [POST]
+
+audit_api_webhooks_update:
+  path: /webhooks/{id}
+  controller: BenMacha\AuditBundle\Controller\Api\WebhookApiController::update
+  methods: [PUT, PATCH]
+  requirements:
+    id: '\d+'
+
+audit_api_webhooks_delete:
+  path: /webhooks/{id}
+  controller: BenMacha\AuditBundle\Controller\Api\WebhookApiController::delete
+  methods: [DELETE]
+  requirements:
+    id: '\d+'
+
+audit_api_webhooks_test:
+  path: /webhooks/{id}/test
+  controller: BenMacha\AuditBundle\Controller\Api\WebhookApiController::test
+  methods: [POST]
+  requirements:
+    id: '\d+'
+
+# Batch Operations API
+audit_api_batch:
+  path: /batch
+  controller: BenMacha\AuditBundle\Controller\Api\BatchApiController::execute
+  methods: [POST]
+
+audit_api_batch_status:
+  path: /batch/{batchId}/status
+  controller: BenMacha\AuditBundle\Controller\Api\BatchApiController::status
+  methods: [GET]
+  requirements:
+    batchId: '[a-zA-Z0-9\-]+'
+
+# API Documentation
+audit_api_docs:
+  path: /docs
+  controller: BenMacha\AuditBundle\Controller\Api\DocumentationApiController::index
+  methods: [GET]
+
+audit_api_docs_openapi:
+  path: /docs/openapi.json
+  controller: BenMacha\AuditBundle\Controller\Api\DocumentationApiController::openapi
+  methods: [GET]
+
+audit_api_docs_swagger:
+  path: /docs/swagger
+  controller: BenMacha\AuditBundle\Controller\Api\DocumentationApiController::swagger
+  methods: [GET]

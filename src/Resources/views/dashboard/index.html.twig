@@ -1,0 +1,504 @@
+{% extends '@Audit/layout.html.twig' %}
+
+{% block title %}Dashboard - Audit System{% endblock %}
+
+{% block breadcrumb_items %}
+    <li class="breadcrumb-item active">Dashboard</li>
+{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block page_actions %}
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="refreshDashboard()">
+                <i class="bi bi-arrow-clockwise"></i> Refresh
+            </button>
+            <a href="{{ path('audit_dashboard_export', {format: 'json'}) }}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-download"></i> Export
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stats-card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <div class="stats-number">{{ statistics.total_logs|number_format }}</div>
+                        <div class="text-white-50">Total Audit Logs</div>
+                    </div>
+                    <div class="ms-3">
+                        <i class="bi bi-list-ul" style="font-size: 2rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stats-card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <div class="stats-number">{{ statistics.total_changes|number_format }}</div>
+                        <div class="text-white-50">Field Changes</div>
+                    </div>
+                    <div class="ms-3">
+                        <i class="bi bi-pencil-square" style="font-size: 2rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stats-card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <div class="stats-number">{{ statistics.unique_entities|number_format }}</div>
+                        <div class="text-white-50">Tracked Entities</div>
+                    </div>
+                    <div class="ms-3">
+                        <i class="bi bi-database" style="font-size: 2rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stats-card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <div class="stats-number">{{ statistics.unique_users|number_format }}</div>
+                        <div class="text-white-50">Active Users</div>
+                    </div>
+                    <div class="ms-3">
+                        <i class="bi bi-people" style="font-size: 2rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row mb-4">
+    <!-- Activity Chart -->
+    <div class="col-lg-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-graph-up"></i>
+                    Activity Over Time
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="activityChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Operations Breakdown -->
+    <div class="col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-pie-chart"></i>
+                    Operations Breakdown
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="operationsChart" height="200"></canvas>
+                <div class="mt-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="operation-insert"><i class="bi bi-plus-circle"></i> Inserts</span>
+                        <span class="fw-bold">{{ statistics.operations.insert|default(0)|number_format }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="operation-update"><i class="bi bi-pencil-circle"></i> Updates</span>
+                        <span class="fw-bold">{{ statistics.operations.update|default(0)|number_format }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="operation-delete"><i class="bi bi-trash-circle"></i> Deletes</span>
+                        <span class="fw-bold">{{ statistics.operations.delete|default(0)|number_format }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity and System Status -->
+<div class="row mb-4">
+    <!-- Recent Activity -->
+    <div class="col-lg-8 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-clock-history"></i>
+                    Recent Activity
+                </h5>
+                <a href="{{ path('audit_log_index') }}" class="btn btn-sm btn-outline-primary">
+                    View All
+                </a>
+            </div>
+            <div class="card-body p-0">
+                {% if recent_activity is empty %}
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-inbox" style="font-size: 3rem; opacity: 0.3;"></i>
+                        <p class="mt-2">No recent activity</p>
+                    </div>
+                {% else %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Entity</th>
+                                    <th>Operation</th>
+                                    <th>User</th>
+                                    <th>Time</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in recent_activity %}
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold">{{ log.entityClass|split('\\')|last }}</div>
+                                        <small class="text-muted">ID: {{ log.entityId }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{{ log.operation == 'INSERT' ? 'success' : (log.operation == 'UPDATE' ? 'warning' : 'danger') }}">
+                                            {{ log.operation }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="fw-bold">{{ log.username ?: 'System' }}</span>
+                                        {% if log.userId %}
+                                            <br><small class="text-muted">ID: {{ log.userId }}</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span data-bs-toggle="tooltip" title="{{ log.createdAt|date('Y-m-d H:i:s') }}">
+                                            {{ log.createdAt|date('M j, H:i') }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{{ path('audit_log_show', {id: log.id}) }}" 
+                                               class="btn btn-outline-primary btn-sm"
+                                               data-bs-toggle="tooltip" title="View Details">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            {% if log.operation != 'INSERT' %}
+                                                <a href="{{ path('audit_rollback_preview', {id: log.id}) }}" 
+                                                   class="btn btn-outline-warning btn-sm"
+                                                   data-bs-toggle="tooltip" title="Preview Rollback">
+                                                    <i class="bi bi-arrow-counterclockwise"></i>
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- System Status -->
+    <div class="col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-shield-check"></i>
+                    System Status
+                </h5>
+            </div>
+            <div class="card-body">
+                <!-- Audit Status -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span>Audit System</span>
+                    <span class="badge bg-{{ system_status.audit_enabled ? 'success' : 'danger' }}">
+                        {{ system_status.audit_enabled ? 'Enabled' : 'Disabled' }}
+                    </span>
+                </div>
+                
+                <!-- Database Connection -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span>Database</span>
+                    <span class="badge bg-{{ system_status.database_connected ? 'success' : 'danger' }}">
+                        {{ system_status.database_connected ? 'Connected' : 'Disconnected' }}
+                    </span>
+                </div>
+                
+                <!-- Async Processing -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span>Async Processing</span>
+                    <span class="badge bg-{{ system_status.async_enabled ? 'success' : 'secondary' }}">
+                        {{ system_status.async_enabled ? 'Enabled' : 'Disabled' }}
+                    </span>
+                </div>
+                
+                <!-- Retention Policy -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span>Retention</span>
+                    <span class="badge bg-info">
+                        {{ system_status.retention_days }} days
+                    </span>
+                </div>
+                
+                <!-- Storage Usage -->
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span>Storage Usage</span>
+                        <span class="text-muted">{{ system_status.storage_usage_mb|number_format(1) }} MB</span>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar" role="progressbar" 
+                             style="width: {{ (system_status.storage_usage_mb / 1000 * 100)|round }}%"></div>
+                    </div>
+                </div>
+                
+                <!-- Configuration Link -->
+                <div class="d-grid">
+                    <a href="{{ path('audit_configuration_index') }}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-gear"></i> Manage Configuration
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-lightning"></i>
+                    Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ path('audit_log_index') }}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-search"></i> Search Logs
+                    </a>
+                    <a href="{{ path('audit_configuration_entities') }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-plus"></i> Add Entity
+                    </a>
+                    <button type="button" class="btn btn-outline-warning btn-sm" onclick="cleanupOldLogs()">
+                        <i class="bi bi-trash"></i> Cleanup Old Logs
+                    </button>
+                    <a href="{{ path('audit_dashboard_export', {format: 'csv'}) }}" class="btn btn-outline-info btn-sm">
+                        <i class="bi bi-file-earmark-spreadsheet"></i> Export Report
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Top Entities -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-bar-chart"></i>
+                    Most Active Entities
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if entity_statistics is empty %}
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-database" style="font-size: 3rem; opacity: 0.3;"></i>
+                        <p class="mt-2">No entity activity recorded</p>
+                    </div>
+                {% else %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Entity Class</th>
+                                    <th>Total Changes</th>
+                                    <th>Inserts</th>
+                                    <th>Updates</th>
+                                    <th>Deletes</th>
+                                    <th>Last Activity</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for entity in entity_statistics %}
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold">{{ entity.entity_class|split('\\')|last }}</div>
+                                        <small class="text-muted">{{ entity.entity_class }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="fw-bold">{{ entity.total|number_format }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="operation-insert">{{ entity.inserts|default(0)|number_format }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="operation-update">{{ entity.updates|default(0)|number_format }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="operation-delete">{{ entity.deletes|default(0)|number_format }}</span>
+                                    </td>
+                                    <td>
+                                        {% if entity.last_activity %}
+                                            <span data-bs-toggle="tooltip" title="{{ entity.last_activity|date('Y-m-d H:i:s') }}">
+                                                {{ entity.last_activity|date('M j, H:i') }}
+                                            </span>
+                                        {% else %}
+                                            <span class="text-muted">Never</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{{ path('audit_log_by_entity', {entityClass: entity.entity_class}) }}" 
+                                               class="btn btn-outline-primary btn-sm"
+                                               data-bs-toggle="tooltip" title="View Entity Logs">
+                                                <i class="bi bi-list"></i>
+                                            </a>
+                                            <a href="{{ path('audit_configuration_edit_entity', {entityClass: entity.entity_class}) }}" 
+                                               class="btn btn-outline-secondary btn-sm"
+                                               data-bs-toggle="tooltip" title="Configure Entity">
+                                                <i class="bi bi-gear"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+// Chart data from server
+const chartData = {
+    daily: {{ daily_statistics|json_encode|raw }},
+    operations: {
+        insert: {{ statistics.operations.insert|default(0) }},
+        update: {{ statistics.operations.update|default(0) }},
+        delete: {{ statistics.operations.delete|default(0) }}
+    }
+};
+
+// Activity Chart
+const activityCtx = document.getElementById('activityChart').getContext('2d');
+const activityChart = new Chart(activityCtx, {
+    type: 'line',
+    data: {
+        labels: chartData.daily.map(item => item.date),
+        datasets: [{
+            label: 'Total Activity',
+            data: chartData.daily.map(item => item.total),
+            borderColor: '#667eea',
+            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+            tension: 0.4,
+            fill: true
+        }, {
+            label: 'Inserts',
+            data: chartData.daily.map(item => item.inserts || 0),
+            borderColor: '#28a745',
+            backgroundColor: 'rgba(40, 167, 69, 0.1)',
+            tension: 0.4
+        }, {
+            label: 'Updates',
+            data: chartData.daily.map(item => item.updates || 0),
+            borderColor: '#ffc107',
+            backgroundColor: 'rgba(255, 193, 7, 0.1)',
+            tension: 0.4
+        }, {
+            label: 'Deletes',
+            data: chartData.daily.map(item => item.deletes || 0),
+            borderColor: '#dc3545',
+            backgroundColor: 'rgba(220, 53, 69, 0.1)',
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        },
+        plugins: {
+            legend: {
+                position: 'top'
+            }
+        }
+    }
+});
+
+// Operations Chart
+const operationsCtx = document.getElementById('operationsChart').getContext('2d');
+const operationsChart = new Chart(operationsCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Inserts', 'Updates', 'Deletes'],
+        datasets: [{
+            data: [
+                chartData.operations.insert,
+                chartData.operations.update,
+                chartData.operations.delete
+            ],
+            backgroundColor: ['#28a745', '#ffc107', '#dc3545'],
+            borderWidth: 0
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
+    }
+});
+
+// Dashboard functions
+function refreshDashboard() {
+    location.reload();
+}
+
+function cleanupOldLogs() {
+    AuditSystem.confirm('Are you sure you want to cleanup old audit logs? This action cannot be undone.', function() {
+        // Redirect to cleanup page or make AJAX call
+        window.location.href = '{{ path("audit_configuration_index") }}#cleanup';
+    });
+}
+
+// Auto-refresh dashboard every 5 minutes
+setInterval(function() {
+    // Only refresh if user is active (not idle)
+    if (document.hasFocus()) {
+        refreshDashboard();
+    }
+}, 300000); // 5 minutes
+</script>
+{% endblock %}

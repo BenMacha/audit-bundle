@@ -1,0 +1,161 @@
+{
+    "name": "benmacha/audit-bundle",
+    "type": "symfony-bundle",
+    "description": "A comprehensive Symfony bundle for auditing entity changes with rollback functionality, web interface, and REST API",
+    "keywords": [
+        "symfony",
+        "bundle",
+        "audit",
+        "logging",
+        "tracking",
+        "rollback",
+        "doctrine",
+        "entity",
+        "changes",
+        "history",
+        "versioning"
+    ],
+    "homepage": "https://github.com/benmacha/symfony-audit-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ben Mecha",
+            "email": "ben@example.com",
+            "homepage": "https://github.com/benmacha",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/benmacha/symfony-audit-bundle/issues",
+        "source": "https://github.com/benmacha/symfony-audit-bundle",
+        "docs": "https://github.com/benmacha/symfony-audit-bundle/blob/main/README.md"
+    },
+    "require": {
+        "php": ">=7.4",
+        "symfony/framework-bundle": "^5.4|^6.0|^7.0",
+        "doctrine/doctrine-bundle": "^2.4",
+        "symfony/twig-bundle": "^5.4|^6.0|^7.0",
+        "symfony/security-bundle": "^5.4|^6.0|^7.0",
+        "symfony/validator": "^5.4|^6.0|^7.0",
+        "symfony/form": "^5.4|^6.0|^7.0",
+        "symfony/serializer": "^5.4|^6.0|^7.0",
+        "symfony/messenger": "^5.4|^6.0|^7.0",
+        "symfony/cache": "^5.4|^6.0|^7.0",
+        "symfony/http-client": "^5.4|^6.0|^7.0",
+        "symfony/filesystem": "^5.4|^6.0|^7.0",
+        "symfony/yaml": "^5.4|^6.0|^7.0",
+        "symfony/console": "^5.4|^6.0|^7.0",
+        "doctrine/orm": "^2.10|^3.0",
+        "doctrine/doctrine-migrations-bundle": "^3.0",
+        "doctrine/annotations": "^1.13|^2.0",
+        "twig/twig": "^3.0",
+        "twig/extra-bundle": "^3.0"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "^5.4|^6.0|^7.0",
+        "symfony/browser-kit": "^5.4|^6.0|^7.0",
+        "symfony/css-selector": "^5.4|^6.0|^7.0",
+        "symfony/dom-crawler": "^5.4|^6.0|^7.0",
+        "symfony/maker-bundle": "^1.36",
+        "symfony/web-profiler-bundle": "^5.4|^6.0|^7.0",
+        "doctrine/doctrine-fixtures-bundle": "^3.3",
+        "phpunit/phpunit": "^9.5|^10.0|^11.0",
+        "phpstan/phpstan": "^1.0",
+        "phpstan/phpstan-symfony": "^1.0",
+        "phpstan/phpstan-doctrine": "^1.0",
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "vimeo/psalm": "^5.0|^6.0",
+        "psalm/plugin-phpunit": "^0.19",
+        "psalm/plugin-symfony": "^5.0|^6.0",
+        "rector/rector": "^0.15|^1.0",
+        "roave/security-advisories": "dev-latest"
+    },
+    "suggest": {
+        "symfony/monolog-bundle": "For advanced logging capabilities",
+        "symfony/mailer": "For email notifications",
+        "symfony/notifier": "For various notification channels",
+        "predis/predis": "For Redis cache support",
+        "phpoffice/phpspreadsheet": "For Excel export functionality",
+        "league/csv": "For enhanced CSV export",
+        "spatie/array-to-xml": "For XML export functionality",
+        "endroid/qr-code": "For QR code generation in exports",
+        "knplabs/knp-paginator-bundle": "For enhanced pagination",
+        "stof/doctrine-extensions-bundle": "For additional Doctrine extensions"
+    },
+    "autoload": {
+        "psr-4": {
+            "BenMacha\\AuditBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BenMacha\\AuditBundle\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "symfony/flex": true,
+            "symfony/runtime": true
+        },
+        "optimize-autoloader": true,
+        "classmap-authoritative": true,
+        "apcu-autoloader": true
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-html coverage",
+        "phpstan": "phpstan analyse src tests --level=8",
+        "psalm": "psalm",
+        "cs-fix": "php-cs-fixer fix",
+        "cs-check": "php-cs-fixer fix --dry-run --diff",
+        "rector": "rector process",
+        "rector-dry": "rector process --dry-run",
+        "quality": [
+            "@cs-check",
+            "@phpstan",
+            "@psalm",
+            "@test"
+        ],
+        "fix": [
+            "@cs-fix",
+            "@rector"
+        ],
+        "post-install-cmd": [],
+        "post-update-cmd": [],
+        "auto-scripts": {}
+    },
+    "scripts-descriptions": {
+        "test": "Run PHPUnit tests",
+        "test-coverage": "Run PHPUnit tests with coverage report",
+        "phpstan": "Run PHPStan static analysis",
+        "psalm": "Run Psalm static analysis",
+        "cs-fix": "Fix coding standards issues",
+        "cs-check": "Check coding standards",
+        "rector": "Run Rector refactoring",
+        "rector-dry": "Run Rector in dry-run mode",
+        "quality": "Run all quality checks",
+        "fix": "Fix code issues automatically"
+    },
+    "extra": {
+        "symfony": {
+            "allow-contrib": false,
+            "require": "5.4.*|6.0.*|7.0.*"
+        },
+        "branch-alias": {
+            "dev-main": "1.0-dev"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/benmacha"
+        },
+        {
+            "type": "patreon",
+            "url": "https://www.patreon.com/benmacha"
+        }
+    ]
+}

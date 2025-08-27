@@ -1,0 +1,326 @@
+# Audit Bundle Services Configuration
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  # Make services in src/ available for dependency injection
+  BenMacha\AuditBundle\:
+    resource: '../../*'
+    exclude:
+      - '../../DependencyInjection/'
+      - '../../Entity/'
+      - '../../Tests/'
+      - '../../Resources/'
+      - '../../Attribute/'
+
+  # Event Listeners
+  BenMacha\AuditBundle\EventListener\AuditListener:
+    tags:
+      - { name: doctrine.event_listener, event: postPersist }
+      - { name: doctrine.event_listener, event: postUpdate }
+      - { name: doctrine.event_listener, event: postRemove }
+      - { name: doctrine.event_listener, event: preUpdate }
+      - { name: doctrine.event_listener, event: preRemove }
+    arguments:
+      $auditManager: '@BenMacha\AuditBundle\Service\AuditManager'
+      $entityManager: '@doctrine.orm.entity_manager'
+
+  BenMacha\AuditBundle\EventListener\ConfigurationListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+    arguments:
+      $auditManager: '@BenMacha\AuditBundle\Service\AuditManager'
+
+  # Core Services
+  BenMacha\AuditBundle\Service\AuditManager:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+      $eventDispatcher: '@event_dispatcher'
+      $logger: '@logger'
+      $config: '%audit.config%'
+    calls:
+      - [setContainer, ['@service_container']]
+    tags:
+      - { name: monolog.logger, channel: audit }
+
+  BenMacha\AuditBundle\Service\RollbackService:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+      $auditManager: '@BenMacha\AuditBundle\Service\AuditManager'
+      $logger: '@logger'
+      $config: '%audit.config%'
+    tags:
+      - { name: monolog.logger, channel: audit }
+
+  BenMacha\AuditBundle\Service\ExportService:
+        arguments:
+            $auditLogRepository: '@BenMacha\AuditBundle\Repository\AuditLogRepository'
+      $filesystem: '@filesystem'
+      $config: '%audit.config%'
+
+  BenMacha\AuditBundle\Service\ConfigurationService:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+      $cache: '@cache.app'
+      $config: '%audit.config%'
+
+  BenMacha\AuditBundle\Service\StatisticsService:
+        arguments:
+            $auditLogRepository: '@BenMacha\AuditBundle\Repository\AuditLogRepository'
+      $entityManager: '@doctrine.orm.entity_manager'
+      $cache: '@cache.app'
+
+  BenMacha\AuditBundle\Service\NotificationService:
+    arguments:
+      $mailer: '@mailer'
+      $httpClient: '@http_client'
+      $config: '%audit.config%'
+      $twig: '@twig'
+
+  BenMacha\AuditBundle\Service\SecurityService:
+    arguments:
+      $config: '%audit.config%'
+      $logger: '@logger'
+    tags:
+      - { name: monolog.logger, channel: audit }
+
+  BenMacha\AuditBundle\Service\AsyncProcessingService:
+    arguments:
+      $messenger: '@messenger.bus.default'
+      $config: '%audit.config%'
+      $logger: '@logger'
+    tags:
+      - { name: monolog.logger, channel: audit }
+
+  # Repositories
+  BenMacha\AuditBundle\Repository\AuditConfigRepository:
+        factory: ['@doctrine.orm.entity_manager', 'getRepository']
+        arguments:
+            - 'BenMacha\AuditBundle\Entity\AuditConfig'
+
+  BenMacha\AuditBundle\Repository\EntityConfigRepository:
+        factory: ['@doctrine.orm.entity_manager', 'getRepository']
+        arguments:
+            - 'BenMacha\AuditBundle\Entity\EntityConfig'
+
+  BenMacha\AuditBundle\Repository\AuditLogRepository:
+        factory: ['@doctrine.orm.entity_manager', 'getRepository']
+        arguments:
+            - 'BenMacha\AuditBundle\Entity\AuditLog'
+
+  BenMacha\AuditBundle\Repository\AuditChangeRepository:
+        factory: ['@doctrine.orm.entity_manager', 'getRepository']
+        arguments:
+            - 'BenMacha\AuditBundle\Entity\AuditChange'
+
+  BenMacha\AuditBundle\Repository\RollbackHistoryRepository:
+        factory: ['@doctrine.orm.entity_manager', 'getRepository']
+        arguments:
+            - 'BenMacha\AuditBundle\Entity\RollbackHistory'
+
+  # Controllers
+  BenMacha\AuditBundle\Controller\Web\DashboardController:
+        arguments:
+            $statisticsService: '@BenMacha\AuditBundle\Service\StatisticsService'
+            $auditLogRepository: '@BenMacha\AuditBundle\Repository\AuditLogRepository'
+    tags: ['controller.service_arguments']
+
+  BenMacha\AuditBundle\Controller\Web\AuditLogController:
+        arguments:
+            $auditLogRepository: '@BenMacha\AuditBundle\Repository\AuditLogRepository'
+            $exportService: '@BenMacha\AuditBundle\Service\ExportService'
+            $rollbackService: '@BenMacha\AuditBundle\Service\RollbackService'
+    tags: ['controller.service_arguments']
+
+  BenMacha\AuditBundle\Controller\Web\RollbackController:
+        arguments:
+            $rollbackService: '@BenMacha\AuditBundle\Service\RollbackService'
+            $auditLogRepository: '@BenMacha\AuditBundle\Repository\AuditLogRepository'
+            $rollbackHistoryRepository: '@BenMacha\AuditBundle\Repository\RollbackHistoryRepository'
+    tags: ['controller.service_arguments']
+
+  BenMacha\AuditBundle\Controller\Web\ConfigurationController:
+    arguments:
+      $configurationService: '@BenMacha\AuditBundle\Service\ConfigurationService'
+      $entityConfigRepository: '@BenMacha\AuditBundle\Repository\EntityConfigRepository'
+    tags: ['controller.service_arguments']
+
+  BenMacha\AuditBundle\Controller\Api\AuditLogApiController:
+    arguments:
+      $auditLogRepository: '@BenMacha\AuditBundle\Repository\AuditLogRepository'
+      $exportService: '@BenMacha\AuditBundle\Service\ExportService'
+      $serializer: '@serializer'
+    tags: ['controller.service_arguments']
+
+  BenMacha\AuditBundle\Controller\Api\RollbackApiController:
+    arguments:
+      $rollbackService: '@BenMacha\AuditBundle\Service\RollbackService'
+      $serializer: '@serializer'
+    tags: ['controller.service_arguments']
+
+  BenMacha\AuditBundle\Controller\Api\ConfigurationApiController:
+    arguments:
+      $configurationService: '@BenMacha\AuditBundle\Service\ConfigurationService'
+      $serializer: '@serializer'
+    tags: ['controller.service_arguments']
+
+  BenMacha\AuditBundle\Controller\Api\StatisticsApiController:
+    arguments:
+      $statisticsService: '@BenMacha\AuditBundle\Service\StatisticsService'
+      $serializer: '@serializer'
+    tags: ['controller.service_arguments']
+
+  # Command Services
+  BenMacha\AuditBundle\Command\CleanupCommand:
+    arguments:
+      $auditLogRepository: '@BenMacha\AuditBundle\Repository\AuditLogRepository'
+      $config: '%audit.config%'
+    tags:
+      - { name: console.command }
+
+  BenMacha\AuditBundle\Command\ExportCommand:
+    arguments:
+      $exportService: '@BenMacha\AuditBundle\Service\ExportService'
+      $auditLogRepository: '@BenMacha\AuditBundle\Repository\AuditLogRepository'
+    tags:
+      - { name: console.command }
+
+  BenMacha\AuditBundle\Command\StatisticsCommand:
+    arguments:
+      $statisticsService: '@BenMacha\AuditBundle\Service\StatisticsService'
+    tags:
+      - { name: console.command }
+
+  BenMacha\AuditBundle\Command\ConfigurationCommand:
+    arguments:
+      $configurationService: '@BenMacha\AuditBundle\Service\ConfigurationService'
+    tags:
+      - { name: console.command }
+
+  # Message Handlers (for async processing)
+  BenMacha\AuditBundle\MessageHandler\AuditLogHandler:
+    arguments:
+      $auditManager: '@BenMacha\AuditBundle\Service\AuditManager'
+      $entityManager: '@doctrine.orm.entity_manager'
+    tags:
+      - { name: messenger.message_handler }
+
+  BenMacha\AuditBundle\MessageHandler\RollbackHandler:
+    arguments:
+      $rollbackService: '@BenMacha\AuditBundle\Service\RollbackService'
+    tags:
+      - { name: messenger.message_handler }
+
+  # Twig Extensions
+  BenMacha\AuditBundle\Twig\AuditExtension:
+    arguments:
+      $auditManager: '@BenMacha\AuditBundle\Service\AuditManager'
+      $statisticsService: '@BenMacha\AuditBundle\Service\StatisticsService'
+    tags:
+      - { name: twig.extension }
+
+  # Security Voters
+  BenMacha\AuditBundle\Security\AuditVoter:
+    arguments:
+      $security: '@security.helper'
+    tags:
+      - { name: security.voter }
+
+  # Cache Services
+  audit.cache:
+    parent: cache.adapter.array
+    tags:
+      - { name: cache.pool, namespace: audit }
+
+  # Filesystem Service
+  audit.filesystem:
+    class: Symfony\Component\Filesystem\Filesystem
+
+  # HTTP Client for notifications
+  audit.http_client:
+    class: Symfony\Contracts\HttpClient\HttpClientInterface
+    factory: ['@http_client', 'create']
+    arguments:
+      - base_uri: '%env(default::AUDIT_WEBHOOK_BASE_URL)%'
+        timeout: 30
+        headers:
+          'Content-Type': 'application/json'
+          'User-Agent': 'BenMacha-Audit-Bundle/1.0'
+
+  # Event Subscribers
+  BenMacha\AuditBundle\EventSubscriber\AuditSubscriber:
+    arguments:
+      $auditManager: '@BenMacha\AuditBundle\Service\AuditManager'
+    tags:
+      - { name: kernel.event_subscriber }
+
+  BenMacha\AuditBundle\EventSubscriber\SecuritySubscriber:
+    arguments:
+      $securityService: '@BenMacha\AuditBundle\Service\SecurityService'
+      $auditManager: '@BenMacha\AuditBundle\Service\AuditManager'
+    tags:
+      - { name: kernel.event_subscriber }
+
+  # Data Transformers
+  BenMacha\AuditBundle\DataTransformer\AuditDataTransformer:
+    arguments:
+      $serializer: '@serializer'
+      $securityService: '@BenMacha\AuditBundle\Service\SecurityService'
+
+  # Validators
+  BenMacha\AuditBundle\Validator\AuditConfigValidator:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+    tags:
+      - { name: validator.constraint_validator }
+
+  # Performance Monitoring
+  BenMacha\AuditBundle\Service\PerformanceMonitor:
+    arguments:
+      $logger: '@logger'
+      $config: '%audit.config%'
+    tags:
+      - { name: monolog.logger, channel: audit_performance }
+
+  # Cleanup Services
+  BenMacha\AuditBundle\Service\CleanupService:
+    arguments:
+      $auditLogRepository: '@BenMacha\AuditBundle\Repository\AuditLogRepository'
+      $entityManager: '@doctrine.orm.entity_manager'
+      $config: '%audit.config%'
+      $logger: '@logger'
+    tags:
+      - { name: monolog.logger, channel: audit }
+
+  # Backup Service
+  BenMacha\AuditBundle\Service\BackupService:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+      $filesystem: '@audit.filesystem'
+      $config: '%audit.config%'
+
+  # Import/Export Handlers
+  BenMacha\AuditBundle\Handler\JsonExportHandler:
+    tags:
+      - { name: audit.export_handler, format: json }
+
+  BenMacha\AuditBundle\Handler\CsvExportHandler:
+    tags:
+      - { name: audit.export_handler, format: csv }
+
+  BenMacha\AuditBundle\Handler\XmlExportHandler:
+    tags:
+      - { name: audit.export_handler, format: xml }
+
+  BenMacha\AuditBundle\Handler\ExcelExportHandler:
+    tags:
+      - { name: audit.export_handler, format: excel }
+
+# Parameters
+parameters:
+  audit.config: '%audit%'
+  audit.version: '1.0.0'
+  audit.build: '%env(default::AUDIT_BUILD_NUMBER)%'
