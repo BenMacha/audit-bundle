@@ -1,0 +1,26 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    # Web Controllers
+    BenMacha\AuditBundle\Controller\:
+        resource: '../../Controller/'
+        tags: ['controller.service_arguments']
+
+    # Web-specific services
+    BenMacha\AuditBundle\Service\WebInterfaceService:
+        public: true
+        arguments:
+            $auditManager: '@BenMacha\AuditBundle\Service\AuditManager'
+            $rollbackService: '@BenMacha\AuditBundle\Service\RollbackService'
+            $config: '%audit%'
+
+    # Twig Extensions
+    BenMacha\AuditBundle\Twig\AuditExtension:
+        tags:
+            - { name: twig.extension }
+        arguments:
+            $auditManager: '@BenMacha\AuditBundle\Service\AuditManager'
+            $config: '%audit%'

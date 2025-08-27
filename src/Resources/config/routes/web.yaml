@@ -1,0 +1,63 @@
+# Audit Web Interface Routes
+
+audit_dashboard:
+    path: /
+    controller: BenMacha\AuditBundle\Controller\DashboardController::index
+    methods: [GET]
+
+audit_logs_list:
+    path: /logs
+    controller: BenMacha\AuditBundle\Controller\AuditLogController::list
+    methods: [GET]
+
+audit_logs_show:
+    path: /logs/{id}
+    controller: BenMacha\AuditBundle\Controller\AuditLogController::show
+    methods: [GET]
+    requirements:
+        id: '\d+'
+
+audit_logs_filter:
+    path: /logs/filter
+    controller: BenMacha\AuditBundle\Controller\AuditLogController::filter
+    methods: [GET, POST]
+
+audit_entity_history:
+    path: /entity/{entityClass}/{entityId}/history
+    controller: BenMacha\AuditBundle\Controller\EntityController::history
+    methods: [GET]
+    requirements:
+        entityId: '.+'
+
+audit_entity_compare:
+    path: /entity/{entityClass}/{entityId}/compare/{fromVersion}/{toVersion}
+    controller: BenMacha\AuditBundle\Controller\EntityController::compare
+    methods: [GET]
+    requirements:
+        entityId: '.+'
+        fromVersion: '\d+'
+        toVersion: '\d+'
+
+audit_rollback_form:
+    path: /rollback/{id}
+    controller: BenMacha\AuditBundle\Controller\RollbackController::form
+    methods: [GET]
+    requirements:
+        id: '\d+'
+
+audit_rollback_execute:
+    path: /rollback/{id}/execute
+    controller: BenMacha\AuditBundle\Controller\RollbackController::execute
+    methods: [POST]
+    requirements:
+        id: '\d+'
+
+audit_statistics:
+    path: /statistics
+    controller: BenMacha\AuditBundle\Controller\StatisticsController::index
+    methods: [GET]
+
+audit_export:
+    path: /export
+    controller: BenMacha\AuditBundle\Controller\ExportController::export
+    methods: [GET, POST]

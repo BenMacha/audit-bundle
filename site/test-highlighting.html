@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syntax Highlighting Test</title>
+    <link rel="stylesheet" href="assets/css/compiled-style.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            color: #1e293b;
+        }
+        h1 {
+            color: #1e293b;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Syntax Highlighting Test</h1>
+    
+    <h2>PHP Code Example</h2>
+    <div class="highlight">
+        <pre><code class="language-php"><?php
+
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+class AuditController extends AbstractController
+{
+    #[Route('/audit', name: 'audit_index')]
+    public function index(): Response
+    {
+        $data = [
+            'message' => 'Welcome to the Audit Bundle',
+            'version' => '1.0.0'
+        ];
+        
+        return $this->json($data);
+    }
+    
+    private function processAuditData(array $auditData): array
+    {
+        foreach ($auditData as $key => $value) {
+            if (is_string($value)) {
+                $auditData[$key] = htmlspecialchars($value);
+            }
+        }
+        
+        return $auditData;
+    }
+}
+</code></pre>
+    </div>
+    
+    <h2>JavaScript Code Example</h2>
+    <div class="highlight">
+        <pre><code class="language-javascript">// Audit data fetcher
+class AuditDataFetcher {
+    constructor(apiUrl) {
+        this.apiUrl = apiUrl;
+        this.cache = new Map();
+    }
+    
+    async fetchAuditData(entityId) {
+        if (this.cache.has(entityId)) {
+            return this.cache.get(entityId);
+        }
+        
+        try {
+            const response = await fetch(`${this.apiUrl}/audit/${entityId}`);
+            const data = await response.json();
+            
+            this.cache.set(entityId, data);
+            return data;
+        } catch (error) {
+            console.error('Failed to fetch audit data:', error);
+            throw error;
+        }
+    }
+}
+</code></pre>
+    </div>
+    
+    <h2>YAML Configuration Example</h2>
+    <div class="highlight">
+        <pre><code class="language-yaml">audit_bundle:
+    enabled: true
+    entities:
+        - App\Entity\User
+        - App\Entity\Product
+    storage:
+        driver: doctrine
+        connection: default
+    web_interface:
+        enabled: true
+        route_prefix: /admin/audit
+    api:
+        enabled: true
+        route_prefix: /api/audit
+</code></pre>
+    </div>
+    
+    <p><strong>Expected Results:</strong></p>
+    <ul>
+        <li>✅ Light theme background (white/light gray)</li>
+        <li>✅ No dark theme colors</li>
+        <li>✅ Consistent syntax highlighting colors</li>
+        <li>✅ No line numbers displayed</li>
+        <li>✅ PHP variables ($var) in orange</li>
+        <li>✅ Keywords in red/pink</li>
+        <li>✅ Strings in blue</li>
+        <li>✅ Comments in gray</li>
+    </ul>
+</body>
+</html>

@@ -1,0 +1,19 @@
+# Audit Bundle Routes Configuration
+
+# Web Interface Routes
+audit_web:
+  resource: routes/web.yaml
+  prefix: '%audit.web.route_prefix%'
+  condition: '%audit.web.enabled%'
+
+# API Routes
+audit_api:
+  resource: routes/api.yaml
+  prefix: '%audit.api.route_prefix%'
+  condition: '%audit.api.enabled%'
+
+# Development Routes (only in dev environment)
+audit_dev:
+  resource: routes/dev.yaml
+  prefix: '%audit.web.route_prefix%/dev'
+  condition: '%kernel.environment% == "dev" and %audit.dev.debug%'

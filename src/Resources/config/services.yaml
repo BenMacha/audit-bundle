@@ -1,0 +1,64 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    # Make classes in src/ available to be used as services
+    BenMacha\AuditBundle\:
+        resource: '../../'
+        exclude:
+            - '../../DependencyInjection/'
+            - '../../Entity/'
+            - '../../Tests/'
+            - '../../AuditBundle.php'
+
+    # Event Listeners
+    BenMacha\AuditBundle\EventListener\AuditEventListener:
+        tags:
+            - { name: doctrine.event_listener, event: preUpdate }
+            - { name: doctrine.event_listener, event: postPersist }
+            - { name: doctrine.event_listener, event: preRemove }
+            - { name: doctrine.event_listener, event: postRemove }
+
+    # Core Services
+    BenMacha\AuditBundle\Service\AuditManager:
+        public: true
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $config: '%audit%'
+
+    BenMacha\AuditBundle\Service\ConfigurationService:
+        public: true
+        arguments:
+            $config: '%audit%'
+
+    BenMacha\AuditBundle\Service\RollbackService:
+        public: true
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $auditManager: '@BenMacha\AuditBundle\Service\AuditManager'
+
+    BenMacha\AuditBundle\Service\MetadataCollector:
+        public: true
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+
+    # Repository
+    BenMacha\AuditBundle\Repository\AuditLogRepository:
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments:
+            - 'BenMacha\AuditBundle\Entity\AuditLog'
+
+    # Alias for easier access
+    audit.manager:
+        alias: 'BenMacha\AuditBundle\Service\AuditManager'
+        public: true
+
+    audit.rollback:
+        alias: 'BenMacha\AuditBundle\Service\RollbackService'
+        public: true
+
+    audit.metadata:
+        alias: 'BenMacha\AuditBundle\Service\MetadataCollector'
+        public: true

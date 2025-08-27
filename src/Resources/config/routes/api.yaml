@@ -1,0 +1,97 @@
+# Audit REST API Routes
+
+# Audit Logs API
+audit_api_logs_list:
+    path: /logs
+    controller: BenMacha\AuditBundle\Controller\Api\AuditLogApiController::list
+    methods: [GET]
+
+audit_api_logs_show:
+    path: /logs/{id}
+    controller: BenMacha\AuditBundle\Controller\Api\AuditLogApiController::show
+    methods: [GET]
+    requirements:
+        id: '\d+'
+
+audit_api_logs_filter:
+    path: /logs/filter
+    controller: BenMacha\AuditBundle\Controller\Api\AuditLogApiController::filter
+    methods: [POST]
+
+audit_api_logs_search:
+    path: /logs/search
+    controller: BenMacha\AuditBundle\Controller\Api\AuditLogApiController::search
+    methods: [POST]
+
+# Entity History API
+audit_api_entity_history:
+    path: /entity/{entityClass}/{entityId}/history
+    controller: BenMacha\AuditBundle\Controller\Api\EntityApiController::history
+    methods: [GET]
+    requirements:
+        entityId: '.+'
+
+audit_api_entity_versions:
+    path: /entity/{entityClass}/{entityId}/versions
+    controller: BenMacha\AuditBundle\Controller\Api\EntityApiController::versions
+    methods: [GET]
+    requirements:
+        entityId: '.+'
+
+audit_api_entity_compare:
+    path: /entity/{entityClass}/{entityId}/compare
+    controller: BenMacha\AuditBundle\Controller\Api\EntityApiController::compare
+    methods: [POST]
+    requirements:
+        entityId: '.+'
+
+# Rollback API
+audit_api_rollback_preview:
+    path: /rollback/{id}/preview
+    controller: BenMacha\AuditBundle\Controller\Api\RollbackApiController::preview
+    methods: [GET]
+    requirements:
+        id: '\d+'
+
+audit_api_rollback_execute:
+    path: /rollback/{id}/execute
+    controller: BenMacha\AuditBundle\Controller\Api\RollbackApiController::execute
+    methods: [POST]
+    requirements:
+        id: '\d+'
+
+audit_api_rollback_batch:
+    path: /rollback/batch
+    controller: BenMacha\AuditBundle\Controller\Api\RollbackApiController::batch
+    methods: [POST]
+
+# Statistics API
+audit_api_statistics:
+    path: /statistics
+    controller: BenMacha\AuditBundle\Controller\Api\StatisticsApiController::index
+    methods: [GET]
+
+audit_api_statistics_entity:
+    path: /statistics/entity/{entityClass}
+    controller: BenMacha\AuditBundle\Controller\Api\StatisticsApiController::entity
+    methods: [GET]
+
+audit_api_statistics_user:
+    path: /statistics/user/{userId}
+    controller: BenMacha\AuditBundle\Controller\Api\StatisticsApiController::user
+    methods: [GET]
+    requirements:
+        userId: '\d+'
+
+# Export API
+audit_api_export:
+    path: /export
+    controller: BenMacha\AuditBundle\Controller\Api\ExportApiController::export
+    methods: [POST]
+
+audit_api_export_status:
+    path: /export/{jobId}/status
+    controller: BenMacha\AuditBundle\Controller\Api\ExportApiController::status
+    methods: [GET]
+    requirements:
+        jobId: '[a-f0-9-]+'

@@ -1,0 +1,582 @@
+{% extends '@Audit/layout.html.twig' %}
+
+{% block title %}Rollback Executed - Audit System{% endblock %}
+
+{% block breadcrumb_items %}
+    <li class="breadcrumb-item"><a href="{{ path('audit_rollback_index') }}">Rollback</a></li>
+    <li class="breadcrumb-item active">Executed</li>
+{% endblock %}
+
+{% block page_title %}
+    Rollback Executed
+    {% if rollback_result.success %}
+        <small class="text-success">Successfully</small>
+    {% else %}
+        <small class="text-danger">Failed</small>
+    {% endif %}
+{% endblock %}
+
+{% block page_actions %}
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <a href="{{ path('audit_log_show', {id: audit_log.id}) }}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-eye"></i> View Original Log
+            </a>
+            {% if rollback_result.new_audit_log_id %}
+                <a href="{{ path('audit_log_show', {id: rollback_result.new_audit_log_id}) }}" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-file-text"></i> View Rollback Log
+                </a>
+            {% endif %}
+        </div>
+        
+        <div class="btn-group me-2">
+            <a href="{{ path('audit_rollback_index') }}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Rollback
+            </a>
+            {% if rollback_result.success and rollback_result.new_audit_log_id %}
+                <a href="{{ path('audit_rollback_preview', {id: rollback_result.new_audit_log_id}) }}" class="btn btn-sm btn-outline-warning">
+                    <i class="bi bi-arrow-counterclockwise"></i> Undo Rollback
+                </a>
+            {% endif %}
+        </div>
+        
+        {% if rollback_result.success %}
+            <div class="btn-group">
+                <a href="{{ path('audit_log_entity_history', {entityClass: audit_log.entityClass, entityId: audit_log.entityId}) }}" class="btn btn-sm btn-primary">
+                    <i class="bi bi-clock-history"></i> View Entity History
+                </a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block content %}
+<!-- Result Alert -->
+{% if rollback_result.success %}
+    <div class="alert alert-success" role="alert">
+        <h5 class="alert-heading">
+            <i class="bi bi-check-circle"></i>
+            Rollback Executed Successfully
+        </h5>
+        <p class="mb-0">
+            The entity has been successfully restored to its previous state. 
+            {% if rollback_result.changes_applied %}
+                {{ rollback_result.changes_applied }} field(s) were modified.
+            {% endif %}
+        </p>
+    </div>
+{% else %}
+    <div class="alert alert-danger" role="alert">
+        <h5 class="alert-heading">
+            <i class="bi bi-x-circle"></i>
+            Rollback Failed
+        </h5>
+        <p class="mb-0">
+            {{ rollback_result.error_message ?: 'An unexpected error occurred during the rollback operation.' }}
+        </p>
+    </div>
+{% endif %}
+
+<!-- Execution Summary -->
+<div class="row mb-4">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-info-circle"></i>
+                    Execution Summary
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-5">Status:</dt>
+                            <dd class="col-sm-7">
+                                {% if rollback_result.success %}
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle"></i> Success
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-danger">
+                                        <i class="bi bi-x-circle"></i> Failed
+                                    </span>
+                                {% endif %}
+                            </dd>
+                            
+                            <dt class="col-sm-5">Executed At:</dt>
+                            <dd class="col-sm-7">
+                                {{ rollback_result.executed_at|date('Y-m-d H:i:s') }}
+                                <br>
+                                <small class="text-muted">{{ rollback_result.executed_at|date_diff|ago }}</small>
+                            </dd>
+                            
+                            <dt class="col-sm-5">Duration:</dt>
+                            <dd class="col-sm-7">
+                                {% if rollback_result.execution_time %}
+                                    {{ (rollback_result.execution_time * 1000)|number_format(0) }}ms
+                                {% else %}
+                                    <span class="text-muted">N/A</span>
+                                {% endif %}
+                            </dd>
+                            
+                            <dt class="col-sm-5">Changes Applied:</dt>
+                            <dd class="col-sm-7">
+                                {% if rollback_result.success %}
+                                    <span class="badge bg-primary">{{ rollback_result.changes_applied ?: 0 }} fields</span>
+                                {% else %}
+                                    <span class="text-muted">N/A</span>
+                                {% endif %}
+                            </dd>
+                        </dl>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-5">Original Log:</dt>
+                            <dd class="col-sm-7">
+                                <a href="{{ path('audit_log_show', {id: audit_log.id}) }}" class="text-decoration-none">
+                                    #{{ audit_log.id }}
+                                </a>
+                                <br>
+                                <small class="text-muted">{{ audit_log.createdAt|date('M j, H:i') }}</small>
+                            </dd>
+                            
+                            <dt class="col-sm-5">Rollback Log:</dt>
+                            <dd class="col-sm-7">
+                                {% if rollback_result.new_audit_log_id %}
+                                    <a href="{{ path('audit_log_show', {id: rollback_result.new_audit_log_id}) }}" class="text-decoration-none">
+                                        #{{ rollback_result.new_audit_log_id }}
+                                    </a>
+                                    <br>
+                                    <small class="text-muted">Just created</small>
+                                {% else %}
+                                    <span class="text-muted">Not created</span>
+                                {% endif %}
+                            </dd>
+                            
+                            <dt class="col-sm-5">Entity:</dt>
+                            <dd class="col-sm-7">
+                                <strong>{{ audit_log.entityClass|split('\\')|last }}</strong>
+                                <br>
+                                <small class="text-muted">ID: {{ audit_log.entityId }}</small>
+                            </dd>
+                            
+                            <dt class="col-sm-5">Executed By:</dt>
+                            <dd class="col-sm-7">
+                                {% if rollback_result.executed_by %}
+                                    <strong>{{ rollback_result.executed_by }}</strong>
+                                {% else %}
+                                    <span class="text-muted">System</span>
+                                {% endif %}
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-gear"></i>
+                    Next Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if rollback_result.success %}
+                    <div class="d-grid gap-2">
+                        {% if rollback_result.new_audit_log_id %}
+                            <a href="{{ path('audit_rollback_preview', {id: rollback_result.new_audit_log_id}) }}" class="btn btn-warning">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                                Undo This Rollback
+                            </a>
+                        {% endif %}
+                        
+                        <a href="{{ path('audit_log_entity_history', {entityClass: audit_log.entityClass, entityId: audit_log.entityId}) }}" class="btn btn-primary">
+                            <i class="bi bi-clock-history"></i>
+                            View Entity History
+                        </a>
+                        
+                        <a href="{{ path('audit_log_show', {id: rollback_result.new_audit_log_id ?: audit_log.id}) }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-file-text"></i>
+                            View Audit Log
+                        </a>
+                        
+                        <a href="{{ path('audit_rollback_index') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-list"></i>
+                            Browse Rollbacks
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="d-grid gap-2">
+                        <a href="{{ path('audit_rollback_preview', {id: audit_log.id}) }}" class="btn btn-primary">
+                            <i class="bi bi-arrow-clockwise"></i>
+                            Try Again
+                        </a>
+                        
+                        <a href="{{ path('audit_log_show', {id: audit_log.id}) }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-file-text"></i>
+                            View Original Log
+                        </a>
+                        
+                        <a href="{{ path('audit_rollback_index') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-list"></i>
+                            Browse Rollbacks
+                        </a>
+                    </div>
+                {% endif %}
+                
+                <hr>
+                
+                <div class="text-center">
+                    <small class="text-muted">
+                        {% if rollback_result.success %}
+                            <i class="bi bi-shield-check"></i>
+                            This operation was logged for audit purposes
+                        {% else %}
+                            <i class="bi bi-info-circle"></i>
+                            No changes were made to your data
+                        {% endif %}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Applied Changes (Success Only) -->
+{% if rollback_result.success and rollback_result.applied_changes is defined and rollback_result.applied_changes is not empty %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="bi bi-check2-square"></i>
+                Applied Changes
+                <small class="text-muted">({{ rollback_result.applied_changes|length }} fields)</small>
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 25%;">Field</th>
+                            <th style="width: 35%;">Previous Value</th>
+                            <th style="width: 35%;">Restored Value</th>
+                            <th style="width: 5%;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for change in rollback_result.applied_changes %}
+                            <tr>
+                                <td>
+                                    <code class="fw-bold">{{ change.field }}</code>
+                                </td>
+                                <td>
+                                    <div class="change-value previous-value">
+                                        {% if change.previous_value is null %}
+                                            <span class="text-muted fst-italic">null</span>
+                                        {% elseif change.previous_value is same as(true) %}
+                                            <span class="text-success">true</span>
+                                        {% elseif change.previous_value is same as(false) %}
+                                            <span class="text-danger">false</span>
+                                        {% elseif change.previous_value is iterable %}
+                                            <details>
+                                                <summary class="text-info">Array/Object ({{ change.previous_value|length }} items)</summary>
+                                                <pre class="mt-2 mb-0"><code>{{ change.previous_value|json_encode(constant('JSON_PRETTY_PRINT')) }}</code></pre>
+                                            </details>
+                                        {% else %}
+                                            <span class="text-break">{{ change.previous_value|slice(0, 100) }}{% if change.previous_value|length > 100 %}...{% endif %}</span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="change-value restored-value">
+                                        {% if change.restored_value is null %}
+                                            <span class="text-muted fst-italic">null</span>
+                                        {% elseif change.restored_value is same as(true) %}
+                                            <span class="text-success">true</span>
+                                        {% elseif change.restored_value is same as(false) %}
+                                            <span class="text-danger">false</span>
+                                        {% elseif change.restored_value is iterable %}
+                                            <details>
+                                                <summary class="text-info">Array/Object ({{ change.restored_value|length }} items)</summary>
+                                                <pre class="mt-2 mb-0"><code>{{ change.restored_value|json_encode(constant('JSON_PRETTY_PRINT')) }}</code></pre>
+                                            </details>
+                                        {% else %}
+                                            <span class="text-break">{{ change.restored_value|slice(0, 100) }}{% if change.restored_value|length > 100 %}...{% endif %}</span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <i class="bi bi-check-circle text-success" data-bs-toggle="tooltip" title="Successfully applied"></i>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<!-- Error Details (Failure Only) -->
+{% if not rollback_result.success %}
+    <div class="card mb-4">
+        <div class="card-header bg-danger text-white">
+            <h5 class="card-title mb-0">
+                <i class="bi bi-exclamation-triangle"></i>
+                Error Details
+            </h5>
+        </div>
+        <div class="card-body">
+            {% if rollback_result.error_message %}
+                <div class="alert alert-danger">
+                    <h6 class="alert-heading">Error Message:</h6>
+                    <p class="mb-0">{{ rollback_result.error_message }}</p>
+                </div>
+            {% endif %}
+            
+            {% if rollback_result.error_code %}
+                <dl class="row">
+                    <dt class="col-sm-3">Error Code:</dt>
+                    <dd class="col-sm-9"><code>{{ rollback_result.error_code }}</code></dd>
+                </dl>
+            {% endif %}
+            
+            {% if rollback_result.conflicts is defined and rollback_result.conflicts is not empty %}
+                <h6>Detected Conflicts:</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Expected Value</th>
+                                <th>Current Value</th>
+                                <th>Conflict Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for conflict in rollback_result.conflicts %}
+                                <tr>
+                                    <td><code>{{ conflict.field }}</code></td>
+                                    <td>
+                                        {% if conflict.expected_value is null %}
+                                            <span class="text-muted">null</span>
+                                        {% else %}
+                                            <code>{{ conflict.expected_value|slice(0, 50) }}{% if conflict.expected_value|length > 50 %}...{% endif %}</code>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if conflict.current_value is null %}
+                                            <span class="text-muted">null</span>
+                                        {% else %}
+                                            <code>{{ conflict.current_value|slice(0, 50) }}{% if conflict.current_value|length > 50 %}...{% endif %}</code>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-warning">{{ conflict.type|title }}</span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+            
+            <div class="mt-3">
+                <h6>Troubleshooting:</h6>
+                <ul class="mb-0">
+                    <li>Check if the entity still exists in the database</li>
+                    <li>Verify that no conflicting changes have been made</li>
+                    <li>Ensure you have the necessary permissions</li>
+                    <li>Try refreshing the conflict check and attempting again</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<!-- Timeline -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">
+            <i class="bi bi-clock-history"></i>
+            Operation Timeline
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-marker bg-primary"></div>
+                <div class="timeline-content">
+                    <h6 class="timeline-title">Original Operation</h6>
+                    <p class="timeline-description">
+                        <strong>{{ audit_log.operation|title }}</strong> operation on 
+                        <strong>{{ audit_log.entityClass|split('\\')|last }}</strong> #{{ audit_log.entityId }}
+                    </p>
+                    <small class="timeline-time text-muted">
+                        {{ audit_log.createdAt|date('M j, Y \\a\\t H:i') }} by {{ audit_log.username ?: 'System' }}
+                    </small>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-marker {{ rollback_result.success ? 'bg-success' : 'bg-danger' }}"></div>
+                <div class="timeline-content">
+                    <h6 class="timeline-title">
+                        Rollback {{ rollback_result.success ? 'Executed' : 'Failed' }}
+                    </h6>
+                    <p class="timeline-description">
+                        {% if rollback_result.success %}
+                            Successfully restored entity to previous state
+                            {% if rollback_result.changes_applied %}
+                                ({{ rollback_result.changes_applied }} fields modified)
+                            {% endif %}
+                        {% else %}
+                            Failed to execute rollback: {{ rollback_result.error_message ?: 'Unknown error' }}
+                        {% endif %}
+                    </p>
+                    <small class="timeline-time text-muted">
+                        {{ rollback_result.executed_at|date('M j, Y \\a\\t H:i') }} by {{ rollback_result.executed_by ?: 'System' }}
+                    </small>
+                </div>
+            </div>
+            
+            {% if rollback_result.success and rollback_result.new_audit_log_id %}
+                <div class="timeline-item">
+                    <div class="timeline-marker bg-info"></div>
+                    <div class="timeline-content">
+                        <h6 class="timeline-title">Audit Log Created</h6>
+                        <p class="timeline-description">
+                            New audit log 
+                            <a href="{{ path('audit_log_show', {id: rollback_result.new_audit_log_id}) }}" class="text-decoration-none">
+                                #{{ rollback_result.new_audit_log_id }}
+                            </a> 
+                            created to track this rollback operation
+                        </p>
+                        <small class="timeline-time text-muted">
+                            {{ rollback_result.executed_at|date('M j, Y \\a\\t H:i') }}
+                        </small>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+// Initialize tooltips
+document.addEventListener('DOMContentLoaded', function() {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+</script>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+.change-value {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+}
+
+.previous-value {
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+}
+
+.restored-value {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+
+details summary {
+    cursor: pointer;
+    user-select: none;
+}
+
+details summary:hover {
+    text-decoration: underline;
+}
+
+details pre {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    font-size: 0.8em;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.text-break {
+    word-break: break-word;
+}
+
+/* Timeline Styles */
+.timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.75rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #dee2e6;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -2rem;
+    top: 0.25rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 2px #dee2e6;
+}
+
+.timeline-content {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.timeline-title {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.timeline-description {
+    margin-bottom: 0.5rem;
+    color: #6c757d;
+}
+
+.timeline-time {
+    font-size: 0.875rem;
+}
+</style>
+{% endblock %}

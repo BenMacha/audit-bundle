@@ -1,0 +1,353 @@
+# Security Configuration for Audit Bundle
+
+security:
+  # Password hashers
+  password_hashers:
+    BenMacha\AuditBundle\Entity\User:
+      algorithm: auto
+
+  # Providers
+  providers:
+    audit_user_provider:
+      id: BenMacha\AuditBundle\Security\UserProvider
+
+  # Firewalls
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+
+    audit_api:
+      pattern: ^/audit/api
+      stateless: true
+      provider: audit_user_provider
+      custom_authenticators:
+        - BenMacha\AuditBundle\Security\ApiTokenAuthenticator
+      entry_point: BenMacha\AuditBundle\Security\ApiAuthenticationEntryPoint
+
+    audit_web:
+      pattern: ^/audit
+      provider: audit_user_provider
+      form_login:
+        login_path: audit_web_login
+        check_path: audit_web_login_check
+        default_target_path: audit_web_dashboard
+        always_use_default_target_path: false
+        use_referer: true
+        failure_path: audit_web_login
+        username_parameter: _username
+        password_parameter: _password
+        csrf_parameter: _token
+        csrf_token_id: authenticate
+        enable_csrf: true
+      logout:
+        path: audit_web_logout
+        target: audit_web_login
+        invalidate_session: true
+        delete_cookies:
+          PHPSESSID: { path: /, domain: ~ }
+      remember_me:
+        secret: '%kernel.secret%'
+        lifetime: 604800 # 1 week
+        path: /audit
+        name: AUDIT_REMEMBER_ME
+        secure: auto
+        httponly: true
+        samesite: lax
+      switch_user:
+        provider: audit_user_provider
+        parameter: _switch_user
+        role: ROLE_AUDIT_ADMIN
+
+    main:
+      lazy: true
+      provider: audit_user_provider
+
+  # Access control
+  access_control:
+    # Public routes
+    - { path: ^/audit/login, roles: PUBLIC_ACCESS }
+    - { path: ^/audit/api/auth/login, roles: PUBLIC_ACCESS }
+    - { path: ^/audit/api/docs, roles: PUBLIC_ACCESS }
+    
+    # API Authentication required
+    - { path: ^/audit/api/auth, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/audit/api, roles: ROLE_AUDIT_API_USER }
+    
+    # Web interface - basic access
+    - { path: ^/audit/dashboard, roles: ROLE_AUDIT_USER }
+    - { path: ^/audit/logs, roles: ROLE_AUDIT_USER }
+    - { path: ^/audit/system/status, roles: ROLE_AUDIT_USER }
+    - { path: ^/audit/system/health, roles: ROLE_AUDIT_USER }
+    
+    # Rollback operations - elevated privileges
+    - { path: ^/audit/rollback, roles: ROLE_AUDIT_ROLLBACK }
+    
+    # Configuration management - admin only
+    - { path: ^/audit/config, roles: ROLE_AUDIT_ADMIN }
+    - { path: ^/audit/entities, roles: ROLE_AUDIT_ADMIN }
+    
+    # Development routes - super admin only
+    - { path: ^/audit/dev, roles: ROLE_AUDIT_SUPER_ADMIN }
+    
+    # Default audit access
+    - { path: ^/audit, roles: ROLE_AUDIT_USER }
+
+  # Role hierarchy
+  role_hierarchy:
+    ROLE_AUDIT_USER: []
+    ROLE_AUDIT_ROLLBACK: [ROLE_AUDIT_USER]
+    ROLE_AUDIT_ADMIN: [ROLE_AUDIT_ROLLBACK]
+    ROLE_AUDIT_SUPER_ADMIN: [ROLE_AUDIT_ADMIN]
+    ROLE_AUDIT_API_USER: [ROLE_AUDIT_USER]
+    ROLE_AUDIT_API_ADMIN: [ROLE_AUDIT_API_USER, ROLE_AUDIT_ADMIN]
+
+# Custom security voters
+services:
+  # Audit log access voter
+  BenMacha\AuditBundle\Security\Voter\AuditLogVoter:
+    tags:
+      - { name: security.voter }
+    arguments:
+      - '@BenMacha\AuditBundle\Service\SecurityService'
+
+  # Entity config access voter
+  BenMacha\AuditBundle\Security\Voter\EntityConfigVoter:
+    tags:
+      - { name: security.voter }
+    arguments:
+      - '@BenMacha\AuditBundle\Service\SecurityService'
+
+  # Rollback access voter
+  BenMacha\AuditBundle\Security\Voter\RollbackVoter:
+    tags:
+      - { name: security.voter }
+    arguments:
+      - '@BenMacha\AuditBundle\Service\SecurityService'
+
+  # Configuration access voter
+  BenMacha\AuditBundle\Security\Voter\ConfigurationVoter:
+    tags:
+      - { name: security.voter }
+    arguments:
+      - '@BenMacha\AuditBundle\Service\SecurityService'
+
+  # API access voter
+  BenMacha\AuditBundle\Security\Voter\ApiAccessVoter:
+    tags:
+      - { name: security.voter }
+    arguments:
+      - '@BenMacha\AuditBundle\Service\SecurityService'
+
+  # User provider
+  BenMacha\AuditBundle\Security\UserProvider:
+    arguments:
+      - '@doctrine.orm.entity_manager'
+      - '@BenMacha\AuditBundle\Service\SecurityService'
+
+  # API token authenticator
+  BenMacha\AuditBundle\Security\ApiTokenAuthenticator:
+    arguments:
+      - '@BenMacha\AuditBundle\Security\UserProvider'
+      - '@BenMacha\AuditBundle\Service\SecurityService'
+      - '@logger'
+    tags:
+      - { name: monolog.logger, channel: security }
+
+  # API authentication entry point
+  BenMacha\AuditBundle\Security\ApiAuthenticationEntryPoint:
+    arguments:
+      - '@serializer'
+
+  # Security event subscriber
+  BenMacha\AuditBundle\EventSubscriber\SecurityEventSubscriber:
+    arguments:
+      - '@BenMacha\AuditBundle\Service\AuditManager'
+      - '@BenMacha\AuditBundle\Service\SecurityService'
+      - '@logger'
+    tags:
+      - { name: kernel.event_subscriber }
+      - { name: monolog.logger, channel: security }
+
+  # Login success handler
+  BenMacha\AuditBundle\Security\LoginSuccessHandler:
+    arguments:
+      - '@BenMacha\AuditBundle\Service\AuditManager'
+      - '@router'
+      - '@logger'
+    tags:
+      - { name: monolog.logger, channel: security }
+
+  # Login failure handler
+  BenMacha\AuditBundle\Security\LoginFailureHandler:
+    arguments:
+      - '@BenMacha\AuditBundle\Service\AuditManager'
+      - '@router'
+      - '@logger'
+    tags:
+      - { name: monolog.logger, channel: security }
+
+  # Logout success handler
+  BenMacha\AuditBundle\Security\LogoutSuccessHandler:
+    arguments:
+      - '@BenMacha\AuditBundle\Service\AuditManager'
+      - '@router'
+      - '@logger'
+    tags:
+      - { name: monolog.logger, channel: security }
+
+  # Access denied handler
+  BenMacha\AuditBundle\Security\AccessDeniedHandler:
+    arguments:
+      - '@BenMacha\AuditBundle\Service\AuditManager'
+      - '@twig'
+      - '@logger'
+    tags:
+      - { name: monolog.logger, channel: security }
+
+  # Rate limiter for API
+  BenMacha\AuditBundle\Security\RateLimiter:
+    arguments:
+      - '@cache.app'
+      - '%audit.api.rate_limit%'
+      - '@logger'
+    tags:
+      - { name: monolog.logger, channel: security }
+
+  # IP whitelist checker
+  BenMacha\AuditBundle\Security\IpWhitelistChecker:
+    arguments:
+      - '%audit.security.ip_whitelist%'
+      - '@request_stack'
+      - '@logger'
+    tags:
+      - { name: monolog.logger, channel: security }
+
+  # CSRF token manager for API
+  BenMacha\AuditBundle\Security\CsrfTokenManager:
+    arguments:
+      - '@security.csrf.token_generator'
+      - '@security.csrf.token_storage'
+      - '@logger'
+    tags:
+      - { name: monolog.logger, channel: security }
+
+  # Password strength validator
+  BenMacha\AuditBundle\Security\PasswordStrengthValidator:
+    arguments:
+      - '%audit.security.password_policy%'
+    tags:
+      - { name: validator.constraint_validator }
+
+  # Two-factor authentication handler
+  BenMacha\AuditBundle\Security\TwoFactorHandler:
+    arguments:
+      - '@BenMacha\AuditBundle\Service\SecurityService'
+      - '@cache.app'
+      - '@logger'
+    tags:
+      - { name: monolog.logger, channel: security }
+
+  # Session security handler
+  BenMacha\AuditBundle\Security\SessionSecurityHandler:
+    arguments:
+      - '@session'
+      - '@request_stack'
+      - '@BenMacha\AuditBundle\Service\SecurityService'
+      - '@logger'
+    tags:
+      - { name: kernel.event_subscriber }
+      - { name: monolog.logger, channel: security }
+
+  # Encryption service for sensitive data
+  BenMacha\AuditBundle\Security\EncryptionService:
+    arguments:
+      - '%audit.security.encryption_key%'
+      - '%audit.security.encryption_algorithm%'
+      - '@logger'
+    tags:
+      - { name: monolog.logger, channel: security }
+
+  # Audit trail for security events
+  BenMacha\AuditBundle\Security\SecurityAuditTrail:
+    arguments:
+      - '@BenMacha\AuditBundle\Service\AuditManager'
+      - '@BenMacha\AuditBundle\Repository\AuditLogRepository'
+      - '@logger'
+    tags:
+      - { name: monolog.logger, channel: security }
+
+# Security parameters
+parameters:
+  # API rate limiting
+  audit.api.rate_limit:
+    requests_per_minute: 60
+    requests_per_hour: 1000
+    requests_per_day: 10000
+    burst_limit: 10
+
+  # IP whitelist (empty means all IPs allowed)
+  audit.security.ip_whitelist: []
+
+  # Password policy
+  audit.security.password_policy:
+    min_length: 8
+    require_uppercase: true
+    require_lowercase: true
+    require_numbers: true
+    require_special_chars: true
+    max_age_days: 90
+    history_count: 5
+
+  # Encryption settings
+  audit.security.encryption_key: '%env(AUDIT_ENCRYPTION_KEY)%'
+  audit.security.encryption_algorithm: 'aes-256-gcm'
+
+  # Session security
+  audit.security.session:
+    timeout: 3600 # 1 hour
+    max_concurrent_sessions: 3
+    require_https: true
+    secure_cookies: true
+
+  # Two-factor authentication
+  audit.security.two_factor:
+    enabled: false
+    issuer: 'Audit Bundle'
+    algorithm: 'sha1'
+    digits: 6
+    period: 30
+
+  # Audit security events
+  audit.security.audit_events:
+    login_attempts: true
+    password_changes: true
+    role_changes: true
+    permission_changes: true
+    failed_access_attempts: true
+    suspicious_activities: true
+
+  # CORS settings for API
+  audit.api.cors:
+    allow_origin: ['*']
+    allow_methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+    allow_headers: ['Content-Type', 'Authorization', 'X-Requested-With']
+    expose_headers: ['X-Total-Count', 'X-Page-Count']
+    max_age: 3600
+    allow_credentials: false
+
+  # API versioning
+  audit.api.versioning:
+    default_version: 'v1'
+    supported_versions: ['v1']
+    version_header: 'X-API-Version'
+    deprecation_notice: true
+
+  # Security headers
+  audit.security.headers:
+    x_frame_options: 'DENY'
+    x_content_type_options: 'nosniff'
+    x_xss_protection: '1; mode=block'
+    strict_transport_security: 'max-age=31536000; includeSubDomains'
+    content_security_policy: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
+    referrer_policy: 'strict-origin-when-cross-origin'

@@ -1,0 +1,52 @@
+# Codecov configuration for audit bundle
+
+coverage:
+  precision: 2
+  round: down
+  range: "70...100"
+  
+  status:
+    project:
+      default:
+        target: 80%
+        threshold: 1%
+        if_not_found: success
+        if_ci_failed: error
+    patch:
+      default:
+        target: 80%
+        threshold: 1%
+        if_not_found: success
+        if_ci_failed: error
+
+  ignore:
+    - "tests/**/*"
+    - "vendor/**/*"
+    - "var/**/*"
+    - "*.md"
+    - "*.yml"
+    - "*.yaml"
+    - "*.xml"
+    - "*.json"
+
+comment:
+  layout: "reach,diff,flags,tree"
+  behavior: default
+  require_changes: false
+  require_base: no
+  require_head: yes
+
+flag_management:
+  default_rules:
+    carryforward: true
+    statuses:
+      - type: project
+        target: 80%
+      - type: patch
+        target: 80%
+
+flags:
+  unittests:
+    paths:
+      - src/
+    carryforward: true

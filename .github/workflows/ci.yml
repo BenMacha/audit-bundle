@@ -1,0 +1,212 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  tests:
+    name: Tests (PHP ${{ matrix.php }}, Symfony ${{ matrix.symfony }})
+    runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
+        symfony: ['5.4.*', '6.4.*', '7.0.*', '7.1.*']
+        exclude:
+          # Symfony 6+ requires PHP 8.0+
+          - php: '7.2'
+            symfony: '6.4.*'
+          - php: '7.3'
+            symfony: '6.4.*'
+          - php: '7.4'
+            symfony: '6.4.*'
+          - php: '7.2'
+            symfony: '7.0.*'
+          - php: '7.3'
+            symfony: '7.0.*'
+          - php: '7.4'
+            symfony: '7.0.*'
+          - php: '7.2'
+            symfony: '7.1.*'
+          - php: '7.3'
+            symfony: '7.1.*'
+          - php: '7.4'
+            symfony: '7.1.*'
+          # Symfony 7+ requires PHP 8.2+
+          - php: '8.0'
+            symfony: '7.0.*'
+          - php: '8.0'
+            symfony: '7.1.*'
+          - php: '8.1'
+            symfony: '7.0.*'
+          - php: '8.1'
+            symfony: '7.1.*'
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: audit_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, dom, filter, gd, json
+          coverage: xdebug
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: |
+          composer require symfony/framework-bundle:${{ matrix.symfony }} --no-update
+          composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Setup test database
+        run: |
+          mysql -h 127.0.0.1 -u root -proot -e "CREATE DATABASE IF NOT EXISTS audit_test;"
+        env:
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_PORT: 3306
+
+      - name: Run PHPUnit tests
+        run: vendor/bin/phpunit tests --coverage-clover=coverage.xml
+        env:
+          DATABASE_URL: mysql://root:root@127.0.0.1:3306/audit_test
+
+      - name: Upload coverage to Codecov
+        if: matrix.php == '8.3' && matrix.symfony == '6.4.*'
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, dom, filter, gd, json
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse src --memory-limit=1G
+
+      - name: Run PHP CS Fixer (dry-run)
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff --verbose
+
+      - name: Run Psalm
+        run: vendor/bin/psalm --output-format=github
+
+  security:
+    name: Security Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, dom, filter, gd, json
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Security Check
+        run: composer audit
+
+  minimum-stability:
+    name: Minimum Stability Check
+    runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: audit_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.2'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, dom, filter, gd, json
+
+      - name: Install minimum dependencies
+        run: |
+          composer update --prefer-lowest --prefer-stable --no-progress --no-interaction
+
+      - name: Setup test database for minimum stability
+        run: |
+          mysql -h 127.0.0.1 -u root -proot -e "CREATE DATABASE IF NOT EXISTS audit_test;"
+        env:
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_PORT: 3306
+
+      - name: Run tests with minimum dependencies
+        run: vendor/bin/phpunit tests
+        env:
+          DATABASE_URL: mysql://root:root@127.0.0.1:3306/audit_test

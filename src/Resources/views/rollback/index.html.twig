@@ -1,0 +1,829 @@
+{% extends '@Audit/layout.html.twig' %}
+
+{% block title %}Rollback Management - Audit System{% endblock %}
+
+{% block breadcrumb_items %}
+    <li class="breadcrumb-item active">Rollback</li>
+{% endblock %}
+
+{% block page_title %}Rollback Management{% endblock %}
+
+{% block page_actions %}
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-outline-primary" onclick="refreshData()">
+                <i class="bi bi-arrow-clockwise"></i> Refresh
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="exportHistory()">
+                <i class="bi bi-download"></i> Export History
+            </button>
+        </div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-outline-info dropdown-toggle" data-bs-toggle="dropdown">
+                <i class="bi bi-gear"></i> Settings
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#" onclick="configureRetention()">
+                    <i class="bi bi-clock"></i> Configure Retention
+                </a></li>
+                <li><a class="dropdown-item" href="#" onclick="cleanupHistory()">
+                    <i class="bi bi-trash"></i> Cleanup Old History
+                </a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{{ path('audit_configuration_index') }}">
+                    <i class="bi bi-sliders"></i> Audit Configuration
+                </a></li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card border-primary">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-arrow-counterclockwise text-primary" style="font-size: 2rem;"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="fw-bold h4 mb-0">{{ statistics.total_rollbacks ?? 0 }}</div>
+                        <div class="text-muted">Total Rollbacks</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card border-success">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-check-circle text-success" style="font-size: 2rem;"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="fw-bold h4 mb-0">{{ statistics.successful_rollbacks ?? 0 }}</div>
+                        <div class="text-muted">Successful</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card border-danger">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-x-circle text-danger" style="font-size: 2rem;"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="fw-bold h4 mb-0">{{ statistics.failed_rollbacks ?? 0 }}</div>
+                        <div class="text-muted">Failed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card border-warning">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-clock text-warning" style="font-size: 2rem;"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="fw-bold h4 mb-0">{{ statistics.pending_rollbacks ?? 0 }}</div>
+                        <div class="text-muted">Pending</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row mb-4">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-bar-chart"></i>
+                    Rollback Activity (Last 30 Days)
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="rollbackActivityChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-pie-chart"></i>
+                    Rollback Status
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="rollbackStatusChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-lightning"></i>
+                    Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="d-grid">
+                            <button type="button" class="btn btn-outline-primary" onclick="showEntityRollback()">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                                Rollback Entity to Date
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="d-grid">
+                            <button type="button" class="btn btn-outline-warning" onclick="showBulkRollback()">
+                                <i class="bi bi-layers"></i>
+                                Bulk Rollback
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="d-grid">
+                            <button type="button" class="btn btn-outline-info" onclick="checkConflicts()">
+                                <i class="bi bi-exclamation-triangle"></i>
+                                Check Conflicts
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="d-grid">
+                            <a href="{{ path('audit_log_index') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-list"></i>
+                                Browse Audit Logs
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card mb-4">
+    <div class="card-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-funnel"></i>
+                    Filter Rollback History
+                </h5>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="resetFilters()">
+                    <i class="bi bi-arrow-clockwise"></i> Reset
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <form id="filterForm" class="row g-3">
+            <div class="col-md-2">
+                <label for="statusFilter" class="form-label">Status</label>
+                <select class="form-select" id="statusFilter" name="status">
+                    <option value="">All Statuses</option>
+                    <option value="success" {{ app.request.query.get('status') == 'success' ? 'selected' : '' }}>Success</option>
+                    <option value="failed" {{ app.request.query.get('status') == 'failed' ? 'selected' : '' }}>Failed</option>
+                    <option value="pending" {{ app.request.query.get('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                </select>
+            </div>
+            
+            <div class="col-md-2">
+                <label for="typeFilter" class="form-label">Type</label>
+                <select class="form-select" id="typeFilter" name="type">
+                    <option value="">All Types</option>
+                    <option value="single" {{ app.request.query.get('type') == 'single' ? 'selected' : '' }}>Single Log</option>
+                    <option value="bulk" {{ app.request.query.get('type') == 'bulk' ? 'selected' : '' }}>Bulk</option>
+                    <option value="entity_to_date" {{ app.request.query.get('type') == 'entity_to_date' ? 'selected' : '' }}>Entity to Date</option>
+                </select>
+            </div>
+            
+            <div class="col-md-2">
+                <label for="userFilter" class="form-label">User</label>
+                <select class="form-select" id="userFilter" name="userId">
+                    <option value="">All Users</option>
+                    <!-- Users will be populated via AJAX -->
+                </select>
+            </div>
+            
+            <div class="col-md-2">
+                <label for="dateFrom" class="form-label">From Date</label>
+                <input type="date" class="form-control" id="dateFrom" name="dateFrom" 
+                       value="{{ app.request.query.get('dateFrom') }}">
+            </div>
+            
+            <div class="col-md-2">
+                <label for="dateTo" class="form-label">To Date</label>
+                <input type="date" class="form-control" id="dateTo" name="dateTo" 
+                       value="{{ app.request.query.get('dateTo') }}">
+            </div>
+            
+            <div class="col-md-2">
+                <label class="form-label">&nbsp;</label>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search"></i> Filter
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Rollback History -->
+<div class="card">
+    <div class="card-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-clock-history"></i>
+                    Rollback History
+                </h5>
+            </div>
+            <div class="col-auto">
+                <div class="btn-group btn-group-sm">
+                    <button type="button" class="btn btn-outline-secondary" onclick="toggleView('table')" id="tableViewBtn">
+                        <i class="bi bi-table"></i> Table
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="toggleView('timeline')" id="timelineViewBtn">
+                        <i class="bi bi-clock"></i> Timeline
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <!-- Table View -->
+        <div id="tableView">
+            {% if rollback_history is not empty %}
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>User</th>
+                                <th>Target</th>
+                                <th>Date</th>
+                                <th>Duration</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for rollback in rollback_history %}
+                            <tr>
+                                <td>
+                                    <a href="{{ path('audit_rollback_history', {id: rollback.id}) }}" class="fw-bold text-decoration-none">
+                                        #{{ rollback.id }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="badge bg-{{ rollback.type == 'single' ? 'primary' : (rollback.type == 'bulk' ? 'warning' : 'info') }}">
+                                        {{ rollback.type|title|replace({'_': ' '}) }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-{{ rollback.status == 'success' ? 'success' : (rollback.status == 'failed' ? 'danger' : 'warning') }}">
+                                        <i class="bi bi-{{ rollback.status == 'success' ? 'check-circle' : (rollback.status == 'failed' ? 'x-circle' : 'clock') }}"></i>
+                                        {{ rollback.status|title }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="fw-bold">{{ rollback.username ?: 'System' }}</div>
+                                    {% if rollback.userId %}
+                                        <small class="text-muted">ID: {{ rollback.userId }}</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if rollback.entityClass %}
+                                        <div class="fw-bold">{{ rollback.entityClass|split('\\')|last }}</div>
+                                        {% if rollback.entityId %}
+                                            <small class="text-muted">ID: {{ rollback.entityId }}</small>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="text-muted">{{ rollback.affectedLogs ?? 0 }} logs</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span data-bs-toggle="tooltip" title="{{ rollback.createdAt|date('Y-m-d H:i:s') }}">
+                                        {{ rollback.createdAt|date('M j, H:i') }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if rollback.duration %}
+                                        <span class="text-muted">{{ rollback.duration }}ms</span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ path('audit_rollback_history', {id: rollback.id}) }}" 
+                                           class="btn btn-outline-primary btn-sm"
+                                           data-bs-toggle="tooltip" title="View Details">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        
+                                        {% if rollback.status == 'success' and rollback.canRevert %}
+                                            <button type="button" class="btn btn-outline-warning btn-sm" 
+                                                    onclick="revertRollback({{ rollback.id }})"
+                                                    data-bs-toggle="tooltip" title="Revert Rollback">
+                                                <i class="bi bi-arrow-clockwise"></i>
+                                            </button>
+                                        {% endif %}
+                                        
+                                        <button type="button" class="btn btn-outline-danger btn-sm" 
+                                                onclick="deleteRollbackHistory({{ rollback.id }})"
+                                                data-bs-toggle="tooltip" title="Delete History">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                {% if pagination.total_pages > 1 %}
+                    <div class="card-footer">
+                        <nav aria-label="Rollback history pagination">
+                            <ul class="pagination pagination-sm justify-content-center mb-0">
+                                {% if pagination.current_page > 1 %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ pagination.current_page - 1 }}{{ app.request.querystring ? '&' ~ app.request.querystring : '' }}">
+                                            <i class="bi bi-chevron-left"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                
+                                {% for page in pagination.pages %}
+                                    <li class="page-item {{ page == pagination.current_page ? 'active' : '' }}">
+                                        <a class="page-link" href="?page={{ page }}{{ app.request.querystring ? '&' ~ app.request.querystring : '' }}">
+                                            {{ page }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                                
+                                {% if pagination.current_page < pagination.total_pages %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ pagination.current_page + 1 }}{{ app.request.querystring ? '&' ~ app.request.querystring : '' }}">
+                                            <i class="bi bi-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-clock-history" style="font-size: 4rem; opacity: 0.3;"></i>
+                    <h4 class="mt-3 text-muted">No Rollback History</h4>
+                    <p class="text-muted">No rollback operations have been performed yet.</p>
+                    
+                    <div class="mt-3">
+                        <a href="{{ path('audit_log_index') }}" class="btn btn-outline-primary">
+                            <i class="bi bi-list"></i> Browse Audit Logs
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Timeline View -->
+        <div id="timelineView" style="display: none;">
+            {% if rollback_history is not empty %}
+                <div class="timeline-container p-4">
+                    {% for rollback in rollback_history %}
+                        <div class="timeline-item" data-rollback-id="{{ rollback.id }}">
+                            <div class="timeline-marker bg-{{ rollback.status == 'success' ? 'success' : (rollback.status == 'failed' ? 'danger' : 'warning') }}">
+                                <i class="bi bi-{{ rollback.status == 'success' ? 'check' : (rollback.status == 'failed' ? 'x' : 'clock') }}"></i>
+                            </div>
+                            
+                            <div class="timeline-content">
+                                <div class="timeline-header">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <div class="d-flex align-items-center">
+                                                <span class="badge bg-{{ rollback.type == 'single' ? 'primary' : (rollback.type == 'bulk' ? 'warning' : 'info') }} me-2">
+                                                    {{ rollback.type|title|replace({'_': ' '}) }}
+                                                </span>
+                                                
+                                                <strong>{{ rollback.username ?: 'System' }}</strong>
+                                                
+                                                <span class="text-muted ms-2">
+                                                    {{ rollback.createdAt|date('Y-m-d H:i:s') }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-auto">
+                                            <span class="badge bg-{{ rollback.status == 'success' ? 'success' : (rollback.status == 'failed' ? 'danger' : 'warning') }}">
+                                                {{ rollback.status|title }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="timeline-details mt-2">
+                                    {% if rollback.entityClass %}
+                                        <div class="mb-2">
+                                            <strong>Target:</strong> {{ rollback.entityClass|split('\\')|last }}
+                                            {% if rollback.entityId %} #{{ rollback.entityId }}{% endif %}
+                                        </div>
+                                    {% endif %}
+                                    
+                                    {% if rollback.affectedLogs %}
+                                        <div class="mb-2">
+                                            <strong>Affected Logs:</strong> {{ rollback.affectedLogs }}
+                                        </div>
+                                    {% endif %}
+                                    
+                                    {% if rollback.duration %}
+                                        <div class="mb-2">
+                                            <strong>Duration:</strong> {{ rollback.duration }}ms
+                                        </div>
+                                    {% endif %}
+                                    
+                                    {% if rollback.errorMessage %}
+                                        <div class="alert alert-danger alert-sm mb-2">
+                                            <i class="bi bi-exclamation-triangle"></i>
+                                            {{ rollback.errorMessage }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="timeline-actions mt-3">
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ path('audit_rollback_history', {id: rollback.id}) }}" 
+                                           class="btn btn-outline-primary btn-sm">
+                                            <i class="bi bi-eye"></i> Details
+                                        </a>
+                                        
+                                        {% if rollback.status == 'success' and rollback.canRevert %}
+                                            <button type="button" class="btn btn-outline-warning btn-sm" 
+                                                    onclick="revertRollback({{ rollback.id }})">
+                                                <i class="bi bi-arrow-clockwise"></i> Revert
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-clock-history" style="font-size: 4rem; opacity: 0.3;"></i>
+                    <h4 class="mt-3 text-muted">No Rollback History</h4>
+                    <p class="text-muted">No rollback operations have been performed yet.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+// Chart data (would be populated from controller)
+const rollbackActivityData = {{ rollback_activity_data|default('{}')|json_encode|raw }};
+const rollbackStatusData = {{ rollback_status_data|default('{}')|json_encode|raw }};
+
+// Initialize charts
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCharts();
+    loadUserFilter();
+});
+
+function initializeCharts() {
+    // Activity Chart
+    const activityCtx = document.getElementById('rollbackActivityChart').getContext('2d');
+    new Chart(activityCtx, {
+        type: 'line',
+        data: {
+            labels: rollbackActivityData.labels || [],
+            datasets: [{
+                label: 'Successful Rollbacks',
+                data: rollbackActivityData.successful || [],
+                borderColor: '#28a745',
+                backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                tension: 0.4
+            }, {
+                label: 'Failed Rollbacks',
+                data: rollbackActivityData.failed || [],
+                borderColor: '#dc3545',
+                backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+    
+    // Status Chart
+    const statusCtx = document.getElementById('rollbackStatusChart').getContext('2d');
+    new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Successful', 'Failed', 'Pending'],
+            datasets: [{
+                data: [
+                    rollbackStatusData.successful || 0,
+                    rollbackStatusData.failed || 0,
+                    rollbackStatusData.pending || 0
+                ],
+                backgroundColor: ['#28a745', '#dc3545', '#ffc107']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+}
+
+// Load user filter options
+function loadUserFilter() {
+    fetch('{{ path("audit_api_statistics_users") }}')
+        .then(response => response.json())
+        .then(data => {
+            const userFilter = document.getElementById('userFilter');
+            data.users.forEach(user => {
+                const option = document.createElement('option');
+                option.value = user.id;
+                option.textContent = user.username || `User #${user.id}`;
+                option.selected = '{{ app.request.query.get("userId") }}' == user.id;
+                userFilter.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Failed to load users:', error));
+}
+
+// Filter form handling
+document.getElementById('filterForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const params = new URLSearchParams();
+    
+    for (let [key, value] of formData.entries()) {
+        if (value) {
+            params.append(key, value);
+        }
+    }
+    
+    const url = new URL(window.location);
+    url.search = params.toString();
+    window.location.href = url.toString();
+});
+
+// Reset filters
+function resetFilters() {
+    const url = new URL(window.location);
+    url.search = '';
+    window.location.href = url.toString();
+}
+
+// Refresh data
+function refreshData() {
+    window.location.reload();
+}
+
+// Toggle view
+function toggleView(view) {
+    const tableView = document.getElementById('tableView');
+    const timelineView = document.getElementById('timelineView');
+    const tableBtn = document.getElementById('tableViewBtn');
+    const timelineBtn = document.getElementById('timelineViewBtn');
+    
+    if (view === 'table') {
+        tableView.style.display = 'block';
+        timelineView.style.display = 'none';
+        tableBtn.classList.add('active');
+        timelineBtn.classList.remove('active');
+    } else {
+        tableView.style.display = 'none';
+        timelineView.style.display = 'block';
+        tableBtn.classList.remove('active');
+        timelineBtn.classList.add('active');
+    }
+}
+
+// Quick action functions
+function showEntityRollback() {
+    window.location.href = '{{ path("audit_log_index") }}?action=rollback_entity';
+}
+
+function showBulkRollback() {
+    window.location.href = '{{ path("audit_log_index") }}?action=bulk_rollback';
+}
+
+function checkConflicts() {
+    AuditSystem.toast('Conflict checking feature coming soon', 'info');
+}
+
+function exportHistory() {
+    const url = '{{ path("audit_api_rollback_history") }}?format=csv';
+    window.open(url, '_blank');
+}
+
+function configureRetention() {
+    AuditSystem.toast('Retention configuration feature coming soon', 'info');
+}
+
+function cleanupHistory() {
+    AuditSystem.confirm('Are you sure you want to cleanup old rollback history?', function() {
+        AuditSystem.toast('Cleanup feature coming soon', 'info');
+    });
+}
+
+// Revert rollback
+function revertRollback(rollbackId) {
+    AuditSystem.confirm('Are you sure you want to revert this rollback? This will undo the rollback operation.', function() {
+        AuditSystem.showLoading();
+        
+        fetch(`{{ path('audit_api_rollback_revert', {id: '__ID__'}) }}`.replace('__ID__', rollbackId), {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': '{{ csrf_token("revert_rollback") }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            AuditSystem.hideLoading();
+            
+            if (data.success) {
+                AuditSystem.toast('Rollback reverted successfully', 'success');
+                window.location.reload();
+            } else {
+                AuditSystem.toast(data.message || 'Failed to revert rollback', 'error');
+            }
+        })
+        .catch(error => {
+            AuditSystem.hideLoading();
+            AuditSystem.toast('Failed to revert rollback', 'error');
+        });
+    });
+}
+
+// Delete rollback history
+function deleteRollbackHistory(rollbackId) {
+    AuditSystem.confirm('Are you sure you want to delete this rollback history entry? This action cannot be undone.', function() {
+        AuditSystem.showLoading();
+        
+        fetch(`{{ path('audit_api_rollback_history_delete', {id: '__ID__'}) }}`.replace('__ID__', rollbackId), {
+            method: 'DELETE',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-Token': '{{ csrf_token("delete_rollback_history") }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            AuditSystem.hideLoading();
+            
+            if (data.success) {
+                AuditSystem.toast('Rollback history deleted successfully', 'success');
+                window.location.reload();
+            } else {
+                AuditSystem.toast(data.message || 'Failed to delete rollback history', 'error');
+            }
+        })
+        .catch(error => {
+            AuditSystem.hideLoading();
+            AuditSystem.toast('Failed to delete rollback history', 'error');
+        });
+    });
+}
+</script>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+.timeline-container {
+    position: relative;
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 60px;
+    margin-bottom: 30px;
+}
+
+.timeline-item:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 40px;
+    bottom: -30px;
+    width: 2px;
+    background: #dee2e6;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    border: 3px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.timeline-content {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    position: relative;
+}
+
+.timeline-content::before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    top: 15px;
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 8px solid #dee2e6;
+}
+
+.timeline-content::after {
+    content: '';
+    position: absolute;
+    left: -7px;
+    top: 15px;
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 8px solid #f8f9fa;
+}
+
+.alert-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+.btn-group-sm .btn {
+    font-size: 0.75rem;
+}
+</style>
+{% endblock %}

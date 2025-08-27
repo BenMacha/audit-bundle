@@ -1,0 +1,170 @@
+name: Wiki Sync
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'README.md'
+      - 'docs/**'
+      - 'CONTRIBUTING.md'
+      - 'CHANGELOG.md'
+      - '.github/workflows/wiki-sync.yml'
+  workflow_dispatch:
+
+jobs:
+  sync-wiki:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install markdown-toc
+        run: npm install -g markdown-toc
+
+      - name: Prepare wiki working copy
+        run: |
+          set -e
+          WIKI_URL="https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git"
+          # Tente de cloner le wiki existant
+          git clone --depth 1 "$WIKI_URL" wiki || {
+            echo "No wiki repo yet. Initializing..."
+            mkdir -p wiki
+            cd wiki
+            git init
+            git config user.name "GitHub Action"
+            git config user.email "action@github.com"
+            git checkout -b master
+            git remote add origin "$WIKI_URL"
+            echo "# Home" > Home.md
+            git add Home.md
+            git commit -m "Initialize wiki"
+            # Pull en cas de création préalable côté UI
+            git pull --rebase origin master || true
+            git push -u origin master || true
+          }
+
+      - name: Generate wiki pages
+        run: |
+          set -e
+          mkdir -p wiki
+
+          process_markdown() {
+            local source_file="$1"
+            local target_file="$2"
+            local title="$3"
+
+            echo "Processing $source_file -> $target_file"
+
+            {
+              echo "# $title"
+              echo ""
+              echo "## Navigation"
+              echo "- [Home](Home)"
+              echo "- [API Documentation](API-Documentation)"
+              echo "- [Attributes Reference](Attributes-Reference)"
+              echo "- [Usage Guide](Usage-Guide)"
+              echo "- [Contributing](Contributing)"
+              echo "- [Changelog](Changelog)"
+              echo ""
+              echo "---"
+              echo ""
+            } > "$target_file"
+
+            if [[ "$source_file" == "README.md" ]]; then
+              # Pour README, à partir de '## Features' si présent, sinon tout
+              if grep -q "^## Features" "$source_file"; then
+                sed -n '/^## Features/,$p' "$source_file" >> "$target_file"
+              else
+                tail -n +2 "$source_file" >> "$target_file"
+              fi
+            else
+              # Pour autres fichiers, sauter le premier H1 si présent
+              awk 'NR==1 && $0 ~ /^#/ {next} {print}' "$source_file" >> "$target_file"
+            fi
+
+            # TOC si document long
+            if [[ $(wc -l < "$target_file") -gt 50 ]]; then
+              tmp=$(mktemp)
+              head -n 10 "$target_file" > "$tmp"
+              echo "" >> "$tmp"
+              echo "## Table of Contents" >> "$tmp"
+              echo "" >> "$tmp"
+              markdown-toc "$target_file" --no-firsth1 >> "$tmp" 2>/dev/null || true
+              echo "" >> "$tmp"
+              echo "---" >> "$tmp"
+              echo "" >> "$tmp"
+              tail -n +11 "$target_file" >> "$tmp"
+              mv "$tmp" "$target_file"
+            fi
+          }
+
+          # Génère les pages si les sources existent
+          [[ -f README.md ]] && process_markdown "README.md" "wiki/Home.md" "Symfony Audit Bundle"
+          [[ -f docs/API.md ]] && process_markdown "docs/API.md" "wiki/API-Documentation.md" "API Documentation"
+          [[ -f docs/ATTRIBUTES.md ]] && process_markdown "docs/ATTRIBUTES.md" "wiki/Attributes-Reference.md" "Attributes Reference"
+          [[ -f docs/USAGE_GUIDE.md ]] && process_markdown "docs/USAGE_GUIDE.md" "wiki/Usage-Guide.md" "Usage Guide"
+          [[ -f CONTRIBUTING.md ]] && process_markdown "CONTRIBUTING.md" "wiki/Contributing.md" "Contributing"
+          [[ -f CHANGELOG.md ]] && process_markdown "CHANGELOG.md" "wiki/Changelog.md" "Changelog"
+
+          # Sidebar
+          cat > wiki/_Sidebar.md <<'EOF'
+          ## Symfony Audit Bundle
+
+          ### Getting Started
+          - [Home](Home)
+          - [Installation](Home#installation)
+          - [Quick Start](Home#quick-start)
+
+          ### Documentation
+          - [API Documentation](API-Documentation)
+          - [Attributes Reference](Attributes-Reference)
+          - [Usage Guide](Usage-Guide)
+
+          ### Development
+          - [Contributing](Contributing)
+          - [Changelog](Changelog)
+
+          ### API Reference
+          - [Core Services](API-Documentation#core-services)
+          - [Repository Methods](API-Documentation#repository-methods)
+          - [Event System](API-Documentation#event-system)
+
+          ### Attributes
+          - [Auditable](Attributes-Reference#auditable)
+          - [IgnoreAudit](Attributes-Reference#ignoreaudit)
+          - [AuditSensitive](Attributes-Reference#auditsensitive)
+          - [AuditMetadata](Attributes-Reference#auditmetadata)
+          EOF
+
+          # Footer
+          {
+            echo "---"
+            echo ""
+            echo "**Symfony Audit Bundle** | [GitHub Repository](https://github.com/${{ github.repository }}) | [Issues](https://github.com/${{ github.repository }}/issues) | [Discussions](https://github.com/${{ github.repository }}/discussions)"
+            echo ""
+            echo "*Last updated: $(date +'%Y-%m-%d %H:%M:%S UTC')*"
+          } > wiki/_Footer.md
+
+      - name: Commit and push wiki changes
+        run: |
+          set -e
+          cd wiki
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+
+          git add -A
+          git commit -m "Sync wiki from ${GITHUB_SHA}" || echo "No changes to commit"
+
+          # Toujours récupérer l’historique distant avant push pour éviter les non-fast-forward
+          git pull --rebase origin master || true
+          git push origin HEAD:master

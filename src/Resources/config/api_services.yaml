@@ -1,0 +1,30 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    # API Controllers
+    BenMacha\AuditBundle\Controller\Api\:
+        resource: '../../Controller/Api/'
+        tags: ['controller.service_arguments']
+
+    # API-specific services
+    BenMacha\AuditBundle\Service\ApiService:
+        public: true
+        arguments:
+            $auditManager: '@BenMacha\AuditBundle\Service\AuditManager'
+            $rollbackService: '@BenMacha\AuditBundle\Service\RollbackService'
+            $config: '%audit%'
+
+    # Serializer
+    BenMacha\AuditBundle\Serializer\AuditLogNormalizer:
+        tags:
+            - { name: serializer.normalizer }
+        arguments:
+            $config: '%audit%'
+
+    # Event Subscribers for API
+    BenMacha\AuditBundle\EventSubscriber\ApiExceptionSubscriber:
+        tags:
+            - { name: kernel

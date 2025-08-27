@@ -1,0 +1,19 @@
+{
+    "bundles": {
+        "BenMacha\\AuditBundle\\AuditBundle": ["all"]
+    },
+    "copy-from-recipe": {
+        "config/": "%CONFIG_DIR%/",
+        "src/": "%SRC_DIR%/"
+    },
+    "env": {
+        "AUDIT_ENABLED": "true",
+        "AUDIT_LOG_LEVEL": "info",
+        "AUDIT_STORAGE_DRIVER": "doctrine"
+    },
+    "gitignore": [
+        "/var/audit/",
+        "/.audit-cache"
+    ],
+    "aliases": ["audit", "audit-bundle"]
+}

@@ -1,0 +1,369 @@
+# Development Routes Configuration
+# These routes are only available in development environment
+
+# Debug Routes
+audit_dev_debug:
+  path: /debug
+  controller: BenMacha\AuditBundle\Controller\Dev\DebugController::index
+  methods: [GET]
+
+audit_dev_debug_entity:
+  path: /debug/entity/{entityClass}
+  controller: BenMacha\AuditBundle\Controller\Dev\DebugController::entity
+  methods: [GET]
+
+audit_dev_debug_listeners:
+  path: /debug/listeners
+  controller: BenMacha\AuditBundle\Controller\Dev\DebugController::listeners
+  methods: [GET]
+
+audit_dev_debug_config:
+  path: /debug/config
+  controller: BenMacha\AuditBundle\Controller\Dev\DebugController::config
+  methods: [GET]
+
+audit_dev_debug_performance:
+  path: /debug/performance
+  controller: BenMacha\AuditBundle\Controller\Dev\DebugController::performance
+  methods: [GET]
+
+audit_dev_debug_cache:
+  path: /debug/cache
+  controller: BenMacha\AuditBundle\Controller\Dev\DebugController::cache
+  methods: [GET]
+
+audit_dev_debug_queue:
+  path: /debug/queue
+  controller: BenMacha\AuditBundle\Controller\Dev\DebugController::queue
+  methods: [GET]
+
+# Test Data Routes
+audit_dev_test_data:
+  path: /test-data
+  controller: BenMacha\AuditBundle\Controller\Dev\TestDataController::index
+  methods: [GET]
+
+audit_dev_test_data_generate:
+  path: /test-data/generate
+  controller: BenMacha\AuditBundle\Controller\Dev\TestDataController::generate
+  methods: [POST]
+
+audit_dev_test_data_clear:
+  path: /test-data/clear
+  controller: BenMacha\AuditBundle\Controller\Dev\TestDataController::clear
+  methods: [DELETE]
+
+audit_dev_test_data_seed:
+  path: /test-data/seed/{type}
+  controller: BenMacha\AuditBundle\Controller\Dev\TestDataController::seed
+  methods: [POST]
+  requirements:
+    type: 'users|products|orders|all'
+
+# Profiler Routes
+audit_dev_profiler:
+  path: /profiler
+  controller: BenMacha\AuditBundle\Controller\Dev\ProfilerController::index
+  methods: [GET]
+
+audit_dev_profiler_audit:
+  path: /profiler/audit/{token}
+  controller: BenMacha\AuditBundle\Controller\Dev\ProfilerController::audit
+  methods: [GET]
+  requirements:
+    token: '[a-zA-Z0-9]+'
+
+audit_dev_profiler_performance:
+  path: /profiler/performance/{token}
+  controller: BenMacha\AuditBundle\Controller\Dev\ProfilerController::performance
+  methods: [GET]
+  requirements:
+    token: '[a-zA-Z0-9]+'
+
+audit_dev_profiler_queries:
+  path: /profiler/queries/{token}
+  controller: BenMacha\AuditBundle\Controller\Dev\ProfilerController::queries
+  methods: [GET]
+  requirements:
+    token: '[a-zA-Z0-9]+'
+
+# Schema Routes
+audit_dev_schema:
+  path: /schema
+  controller: BenMacha\AuditBundle\Controller\Dev\SchemaController::index
+  methods: [GET]
+
+audit_dev_schema_validate:
+  path: /schema/validate
+  controller: BenMacha\AuditBundle\Controller\Dev\SchemaController::validate
+  methods: [GET]
+
+audit_dev_schema_update:
+  path: /schema/update
+  controller: BenMacha\AuditBundle\Controller\Dev\SchemaController::update
+  methods: [POST]
+
+audit_dev_schema_diff:
+  path: /schema/diff
+  controller: BenMacha\AuditBundle\Controller\Dev\SchemaController::diff
+  methods: [GET]
+
+audit_dev_schema_create:
+  path: /schema/create
+  controller: BenMacha\AuditBundle\Controller\Dev\SchemaController::create
+  methods: [POST]
+
+audit_dev_schema_drop:
+  path: /schema/drop
+  controller: BenMacha\AuditBundle\Controller\Dev\SchemaController::drop
+  methods: [DELETE]
+
+# Migration Routes
+audit_dev_migrations:
+  path: /migrations
+  controller: BenMacha\AuditBundle\Controller\Dev\MigrationController::index
+  methods: [GET]
+
+audit_dev_migrations_generate:
+  path: /migrations/generate
+  controller: BenMacha\AuditBundle\Controller\Dev\MigrationController::generate
+  methods: [POST]
+
+audit_dev_migrations_execute:
+  path: /migrations/execute
+  controller: BenMacha\AuditBundle\Controller\Dev\MigrationController::execute
+  methods: [POST]
+
+audit_dev_migrations_status:
+  path: /migrations/status
+  controller: BenMacha\AuditBundle\Controller\Dev\MigrationController::status
+  methods: [GET]
+
+audit_dev_migrations_rollback:
+  path: /migrations/rollback
+  controller: BenMacha\AuditBundle\Controller\Dev\MigrationController::rollback
+  methods: [POST]
+
+# Cache Management Routes
+audit_dev_cache_clear:
+  path: /cache/clear
+  controller: BenMacha\AuditBundle\Controller\Dev\CacheController::clear
+  methods: [POST]
+
+audit_dev_cache_warmup:
+  path: /cache/warmup
+  controller: BenMacha\AuditBundle\Controller\Dev\CacheController::warmup
+  methods: [POST]
+
+audit_dev_cache_stats:
+  path: /cache/stats
+  controller: BenMacha\AuditBundle\Controller\Dev\CacheController::stats
+  methods: [GET]
+
+audit_dev_cache_keys:
+  path: /cache/keys
+  controller: BenMacha\AuditBundle\Controller\Dev\CacheController::keys
+  methods: [GET]
+
+audit_dev_cache_delete:
+  path: /cache/delete
+  controller: BenMacha\AuditBundle\Controller\Dev\CacheController::delete
+  methods: [DELETE]
+
+# Queue Management Routes
+audit_dev_queue_status:
+  path: /queue/status
+  controller: BenMacha\AuditBundle\Controller\Dev\QueueController::status
+  methods: [GET]
+
+audit_dev_queue_jobs:
+  path: /queue/jobs
+  controller: BenMacha\AuditBundle\Controller\Dev\QueueController::jobs
+  methods: [GET]
+
+audit_dev_queue_failed:
+  path: /queue/failed
+  controller: BenMacha\AuditBundle\Controller\Dev\QueueController::failed
+  methods: [GET]
+
+audit_dev_queue_retry:
+  path: /queue/retry/{id}
+  controller: BenMacha\AuditBundle\Controller\Dev\QueueController::retry
+  methods: [POST]
+  requirements:
+    id: '\d+'
+
+audit_dev_queue_clear:
+  path: /queue/clear
+  controller: BenMacha\AuditBundle\Controller\Dev\QueueController::clear
+  methods: [DELETE]
+
+audit_dev_queue_process:
+  path: /queue/process
+  controller: BenMacha\AuditBundle\Controller\Dev\QueueController::process
+  methods: [POST]
+
+# Log Viewer Routes
+audit_dev_logs:
+  path: /logs
+  controller: BenMacha\AuditBundle\Controller\Dev\LogController::index
+  methods: [GET]
+
+audit_dev_logs_view:
+  path: /logs/{file}
+  controller: BenMacha\AuditBundle\Controller\Dev\LogController::view
+  methods: [GET]
+  requirements:
+    file: '[a-zA-Z0-9\-_\.]+'
+
+audit_dev_logs_download:
+  path: /logs/{file}/download
+  controller: BenMacha\AuditBundle\Controller\Dev\LogController::download
+  methods: [GET]
+  requirements:
+    file: '[a-zA-Z0-9\-_\.]+'
+
+audit_dev_logs_clear:
+  path: /logs/clear
+  controller: BenMacha\AuditBundle\Controller\Dev\LogController::clear
+  methods: [DELETE]
+
+# Configuration Testing Routes
+audit_dev_config_test:
+  path: /config/test
+  controller: BenMacha\AuditBundle\Controller\Dev\ConfigTestController::index
+  methods: [GET]
+
+audit_dev_config_test_database:
+  path: /config/test/database
+  controller: BenMacha\AuditBundle\Controller\Dev\ConfigTestController::database
+  methods: [GET]
+
+audit_dev_config_test_cache:
+  path: /config/test/cache
+  controller: BenMacha\AuditBundle\Controller\Dev\ConfigTestController::cache
+  methods: [GET]
+
+audit_dev_config_test_queue:
+  path: /config/test/queue
+  controller: BenMacha\AuditBundle\Controller\Dev\ConfigTestController::queue
+  methods: [GET]
+
+audit_dev_config_test_notifications:
+  path: /config/test/notifications
+  controller: BenMacha\AuditBundle\Controller\Dev\ConfigTestController::notifications
+  methods: [GET]
+
+audit_dev_config_test_security:
+  path: /config/test/security
+  controller: BenMacha\AuditBundle\Controller\Dev\ConfigTestController::security
+  methods: [GET]
+
+# Entity Inspector Routes
+audit_dev_entities:
+  path: /entities
+  controller: BenMacha\AuditBundle\Controller\Dev\EntityInspectorController::index
+  methods: [GET]
+
+audit_dev_entities_inspect:
+  path: /entities/inspect/{entityClass}
+  controller: BenMacha\AuditBundle\Controller\Dev\EntityInspectorController::inspect
+  methods: [GET]
+
+audit_dev_entities_metadata:
+  path: /entities/metadata/{entityClass}
+  controller: BenMacha\AuditBundle\Controller\Dev\EntityInspectorController::metadata
+  methods: [GET]
+
+audit_dev_entities_attributes:
+  path: /entities/attributes/{entityClass}
+  controller: BenMacha\AuditBundle\Controller\Dev\EntityInspectorController::attributes
+  methods: [GET]
+
+audit_dev_entities_relations:
+  path: /entities/relations/{entityClass}
+  controller: BenMacha\AuditBundle\Controller\Dev\EntityInspectorController::relations
+  methods: [GET]
+
+# Performance Testing Routes
+audit_dev_performance:
+  path: /performance
+  controller: BenMacha\AuditBundle\Controller\Dev\PerformanceController::index
+  methods: [GET]
+
+audit_dev_performance_benchmark:
+  path: /performance/benchmark
+  controller: BenMacha\AuditBundle\Controller\Dev\PerformanceController::benchmark
+  methods: [POST]
+
+audit_dev_performance_stress:
+  path: /performance/stress
+  controller: BenMacha\AuditBundle\Controller\Dev\PerformanceController::stress
+  methods: [POST]
+
+audit_dev_performance_memory:
+  path: /performance/memory
+  controller: BenMacha\AuditBundle\Controller\Dev\PerformanceController::memory
+  methods: [GET]
+
+audit_dev_performance_queries:
+  path: /performance/queries
+  controller: BenMacha\AuditBundle\Controller\Dev\PerformanceController::queries
+  methods: [GET]
+
+# Documentation Routes
+audit_dev_docs:
+  path: /docs
+  controller: BenMacha\AuditBundle\Controller\Dev\DocumentationController::index
+  methods: [GET]
+
+audit_dev_docs_api:
+  path: /docs/api
+  controller: BenMacha\AuditBundle\Controller\Dev\DocumentationController::api
+  methods: [GET]
+
+audit_dev_docs_events:
+  path: /docs/events
+  controller: BenMacha\AuditBundle\Controller\Dev\DocumentationController::events
+  methods: [GET]
+
+audit_dev_docs_services:
+  path: /docs/services
+  controller: BenMacha\AuditBundle\Controller\Dev\DocumentationController::services
+  methods: [GET]
+
+audit_dev_docs_configuration:
+  path: /docs/configuration
+  controller: BenMacha\AuditBundle\Controller\Dev\DocumentationController::configuration
+  methods: [GET]
+
+# Utility Routes
+audit_dev_utils:
+  path: /utils
+  controller: BenMacha\AuditBundle\Controller\Dev\UtilityController::index
+  methods: [GET]
+
+audit_dev_utils_phpinfo:
+  path: /utils/phpinfo
+  controller: BenMacha\AuditBundle\Controller\Dev\UtilityController::phpinfo
+  methods: [GET]
+
+audit_dev_utils_environment:
+  path: /utils/environment
+  controller: BenMacha\AuditBundle\Controller\Dev\UtilityController::environment
+  methods: [GET]
+
+audit_dev_utils_dependencies:
+  path: /utils/dependencies
+  controller: BenMacha\AuditBundle\Controller\Dev\UtilityController::dependencies
+  methods: [GET]
+
+audit_dev_utils_routes:
+  path: /utils/routes
+  controller: BenMacha\AuditBundle\Controller\Dev\UtilityController::routes
+  methods: [GET]
+
+audit_dev_utils_services:
+  path: /utils/services
+  controller: BenMacha\AuditBundle\Controller\Dev\UtilityController::services
+  methods: [GET]

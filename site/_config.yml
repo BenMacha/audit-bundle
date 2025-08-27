@@ -1,0 +1,101 @@
+# Site settings
+title: "Symfony Audit Bundle v0.1.0"
+description: "A comprehensive Symfony bundle for auditing entity changes with rollback functionality, web interface, and REST API. Now with Symfony Flex auto-configuration support!"
+baseurl: ""
+url: "https://benmacha.github.io/audit-bundle"
+
+# Author information
+author:
+  name: "Ben Macha"
+  email: "contact@benmacha.tn"
+  url: "https://github.com/benmacha"
+
+# Version information
+version: "0.1.0"
+release_date: "2024-01-17"
+
+# Repository information
+repository: "benmacha/audit-bundle"
+github_username: benmacha
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-github-metadata
+
+# Exclude from processing
+exclude:
+  - vendor/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
+  - composer.json
+  - composer.lock
+  - phpunit.xml
+  - .phpunit.result.cache
+  - tests/
+  - src/
+  - var/
+  - .env*
+  - .git*
+  - README.md
+
+# Include files
+include:
+  - _pages
+
+# Collections
+collections:
+  docs:
+    output: true
+    permalink: /:collection/:name/
+
+# Navigation
+navigation:
+  - title: "Home"
+    url: "/"
+  - title: "Documentation"
+    url: "/docs/"
+  - title: "API Reference"
+    url: "/api/"
+  - title: "Examples"
+    url: "/examples/"
+  - title: "Contributing"
+    url: "/contributing/"
+  - title: "GitHub"
+    url: "https://github.com/benmacha/audit-bundle"
+    external: true
+
+# Social links
+social:
+  github: benmacha
+  twitter: benmacha
+  linkedin: benmacha
+
+# SEO settings
+lang: en_US
+timezone: UTC
+
+# Sass settings
+sass:
+  sass_dir: _sass
+  style: compressed
+
+# Kramdown settings
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: 'highlight'
+    span:
+      line_numbers: false
+    block:
+      line_numbers: false

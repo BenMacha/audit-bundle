@@ -1,0 +1,137 @@
+/* Light theme syntax highlighting styles */
+.highlight {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  padding: 1rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+
+.highlight pre {
+  margin: 0;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.highlight code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Hide line numbers completely */
+.highlight .lineno,
+.highlight .gl,
+.highlight .gutter {
+  display: none !important;
+}
+
+/* PHP and general syntax highlighting */
+.highlight .k,    /* Keywords */
+.highlight .kd,   /* Keyword declarations */
+.highlight .kn,   /* Keyword namespace */
+.highlight .kp,   /* Keyword pseudo */
+.highlight .kr,   /* Keyword reserved */
+.highlight .kt {  /* Keyword type */
+  color: #d73a49;
+  font-weight: 600;
+}
+
+.highlight .s,    /* Strings */
+.highlight .s1,   /* String single */
+.highlight .s2,   /* String double */
+.highlight .sb,   /* String backtick */
+.highlight .sc,   /* String char */
+.highlight .sd,   /* String doc */
+.highlight .se,   /* String escape */
+.highlight .sh,   /* String heredoc */
+.highlight .si,   /* String interpol */
+.highlight .sx {  /* String other */
+  color: #032f62;
+}
+
+.highlight .nv,   /* Variables */
+.highlight .vc,   /* Variable class */
+.highlight .vg,   /* Variable global */
+.highlight .vi {  /* Variable instance */
+  color: #e36209;
+}
+
+.highlight .c,    /* Comments */
+.highlight .c1,   /* Comment single */
+.highlight .cm,   /* Comment multiline */
+.highlight .cp,   /* Comment preproc */
+.highlight .cs {  /* Comment special */
+  color: #6a737d;
+  font-style: italic;
+}
+
+.highlight .m,    /* Numbers */
+.highlight .mf,   /* Number float */
+.highlight .mh,   /* Number hex */
+.highlight .mi,   /* Number integer */
+.highlight .mo {  /* Number octal */
+  color: #005cc5;
+}
+
+.highlight .n,    /* Names */
+.highlight .na,   /* Name attribute */
+.highlight .nb,   /* Name builtin */
+.highlight .nc,   /* Name class */
+.highlight .nd,   /* Name decorator */
+.highlight .ne,   /* Name exception */
+.highlight .nf,   /* Name function */
+.highlight .nl,   /* Name label */
+.highlight .nn,   /* Name namespace */
+.highlight .no,   /* Name constant */
+.highlight .nt,   /* Name tag */
+.highlight .nx {  /* Name other */
+  color: #24292e;
+}
+
+.highlight .o,    /* Operators */
+.highlight .ow {  /* Operator word */
+  color: #d73a49;
+}
+
+.highlight .p {   /* Punctuation */
+  color: #24292e;
+}
+
+/* PHP specific */
+.highlight .x {   /* PHP text */
+  color: #24292e;
+}
+
+.highlight .hll { /* Highlighted line */
+  background-color: #ffffcc;
+}
+
+/* Ensure no dark theme colors */
+.highlight,
+.highlight * {
+  background-color: #f8f9fa !important;
+  color: inherit !important;
+}
+
+.highlight .err { /* Error */
+  color: #cb2431;
+  background-color: transparent;
+}
+
+/* Override any potential dark theme from minima */
+@media (prefers-color-scheme: dark) {
+  .highlight {
+    background-color: #f8f9fa !important;
+    color: #24292e !important;
+  }
+  
+  .highlight * {
+    background-color: transparent !important;
+  }
+}

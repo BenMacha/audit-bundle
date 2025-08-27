@@ -1,0 +1,575 @@
+{% extends '@Audit/layout.html.twig' %}
+
+{% block title %}Audit Log #{{ log.id }} - Audit System{% endblock %}
+
+{% block breadcrumb_items %}
+    <li class="breadcrumb-item"><a href="{{ path('audit_log_index') }}">Audit Logs</a></li>
+    <li class="breadcrumb-item active">Log #{{ log.id }}</li>
+{% endblock %}
+
+{% block page_title %}Audit Log #{{ log.id }}{% endblock %}
+
+{% block page_actions %}
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <a href="{{ path('audit_log_index') }}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to List
+            </a>
+            {% if log.operation != 'INSERT' %}
+                <a href="{{ path('audit_rollback_preview', {id: log.id}) }}" class="btn btn-sm btn-outline-warning">
+                    <i class="bi bi-arrow-counterclockwise"></i> Preview Rollback
+                </a>
+            {% endif %}
+            <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteLog({{ log.id }})">
+                <i class="bi bi-trash"></i> Delete
+            </button>
+        </div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                <i class="bi bi-three-dots"></i> More
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{{ path('audit_log_by_entity', {entityClass: log.entityClass, entityId: log.entityId}) }}">
+                    <i class="bi bi-list"></i> View Entity History
+                </a></li>
+                {% if log.userId %}
+                    <li><a class="dropdown-item" href="{{ path('audit_log_by_user', {userId: log.userId}) }}">
+                        <i class="bi bi-person"></i> View User Activity
+                    </a></li>
+                {% endif %}
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{{ path('audit_log_export', {id: log.id, format: 'json'}) }}">
+                    <i class="bi bi-download"></i> Export as JSON
+                </a></li>
+                <li><a class="dropdown-item" href="{{ path('audit_log_export', {id: log.id, format: 'xml'}) }}">
+                    <i class="bi bi-download"></i> Export as XML
+                </a></li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+<!-- Log Overview -->
+<div class="row mb-4">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-info-circle"></i>
+                    Log Details
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">ID:</dt>
+                            <dd class="col-sm-8">
+                                <span class="fw-bold">#{{ log.id }}</span>
+                            </dd>
+                            
+                            <dt class="col-sm-4">Entity:</dt>
+                            <dd class="col-sm-8">
+                                <div class="fw-bold">{{ log.entityClass|split('\\')|last }}</div>
+                                <small class="text-muted">{{ log.entityClass }}</small>
+                            </dd>
+                            
+                            <dt class="col-sm-4">Entity ID:</dt>
+                            <dd class="col-sm-8">
+                                <span class="badge bg-secondary">{{ log.entityId }}</span>
+                            </dd>
+                            
+                            <dt class="col-sm-4">Operation:</dt>
+                            <dd class="col-sm-8">
+                                <span class="badge bg-{{ log.operation == 'INSERT' ? 'success' : (log.operation == 'UPDATE' ? 'warning' : 'danger') }} fs-6">
+                                    <i class="bi bi-{{ log.operation == 'INSERT' ? 'plus' : (log.operation == 'UPDATE' ? 'pencil' : 'trash') }}"></i>
+                                    {{ log.operation }}
+                                </span>
+                            </dd>
+                        </dl>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">User:</dt>
+                            <dd class="col-sm-8">
+                                <div class="fw-bold">{{ log.username ?: 'System' }}</div>
+                                {% if log.userId %}
+                                    <small class="text-muted">ID: {{ log.userId }}</small>
+                                {% endif %}
+                            </dd>
+                            
+                            <dt class="col-sm-4">Date:</dt>
+                            <dd class="col-sm-8">
+                                <div class="fw-bold">{{ log.createdAt|date('Y-m-d H:i:s') }}</div>
+                                <small class="text-muted">{{ log.createdAt|date('l, F j, Y') }}</small>
+                            </dd>
+                            
+                            <dt class="col-sm-4">Changes:</dt>
+                            <dd class="col-sm-8">
+                                <span class="badge bg-info">{{ log.changes|length }} field{{ log.changes|length != 1 ? 's' : '' }}</span>
+                            </dd>
+                            
+                            {% if log.ipAddress %}
+                                <dt class="col-sm-4">IP Address:</dt>
+                                <dd class="col-sm-8">
+                                    <code>{{ log.ipAddress }}</code>
+                                </dd>
+                            {% endif %}
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-lightning"></i>
+                    Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ path('audit_log_by_entity', {entityClass: log.entityClass, entityId: log.entityId}) }}" 
+                       class="btn btn-outline-primary">
+                        <i class="bi bi-list"></i> View Entity History
+                    </a>
+                    
+                    {% if log.userId %}
+                        <a href="{{ path('audit_log_by_user', {userId: log.userId}) }}" 
+                           class="btn btn-outline-secondary">
+                            <i class="bi bi-person"></i> View User Activity
+                        </a>
+                    {% endif %}
+                    
+                    {% if log.operation != 'INSERT' %}
+                        <a href="{{ path('audit_rollback_preview', {id: log.id}) }}" 
+                           class="btn btn-outline-warning">
+                            <i class="bi bi-arrow-counterclockwise"></i> Preview Rollback
+                        </a>
+                    {% endif %}
+                    
+                    <button type="button" class="btn btn-outline-info" onclick="compareWithPrevious()">
+                        <i class="bi bi-arrow-left-right"></i> Compare with Previous
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation -->
+        {% if navigation %}
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="bi bi-arrow-left-right"></i>
+                        Navigation
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        {% if navigation.previous %}
+                            <a href="{{ path('audit_log_show', {id: navigation.previous.id}) }}" 
+                               class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-chevron-left"></i> Previous
+                            </a>
+                        {% else %}
+                            <span class="btn btn-outline-secondary btn-sm disabled">
+                                <i class="bi bi-chevron-left"></i> Previous
+                            </span>
+                        {% endif %}
+                        
+                        {% if navigation.next %}
+                            <a href="{{ path('audit_log_show', {id: navigation.next.id}) }}" 
+                               class="btn btn-outline-secondary btn-sm">
+                                Next <i class="bi bi-chevron-right"></i>
+                            </a>
+                        {% else %}
+                            <span class="btn btn-outline-secondary btn-sm disabled">
+                                Next <i class="bi bi-chevron-right"></i>
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Field Changes -->
+{% if log.changes is not empty %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="bi bi-pencil-square"></i>
+                Field Changes ({{ log.changes|length }})
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th width="200">Field Name</th>
+                            <th>Old Value</th>
+                            <th>New Value</th>
+                            <th width="100">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for change in log.changes %}
+                        <tr>
+                            <td>
+                                <span class="fw-bold">{{ change.fieldName }}</span>
+                                {% if change.fieldType %}
+                                    <br><small class="text-muted">{{ change.fieldType }}</small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if change.oldValue is not null %}
+                                    <div class="value-container old-value">
+                                        {% if change.oldValue|length > 100 %}
+                                            <div class="value-preview" onclick="toggleFullValue(this)">
+                                                {{ change.oldValue|slice(0, 100) }}...
+                                                <br><small class="text-muted">Click to expand</small>
+                                            </div>
+                                            <div class="value-full" style="display: none;">
+                                                <pre class="mb-0">{{ change.oldValue }}</pre>
+                                                <small class="text-muted">Click to collapse</small>
+                                            </div>
+                                        {% else %}
+                                            <pre class="mb-0">{{ change.oldValue }}</pre>
+                                        {% endif %}
+                                    </div>
+                                {% else %}
+                                    <span class="text-muted fst-italic">null</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if change.newValue is not null %}
+                                    <div class="value-container new-value">
+                                        {% if change.newValue|length > 100 %}
+                                            <div class="value-preview" onclick="toggleFullValue(this)">
+                                                {{ change.newValue|slice(0, 100) }}...
+                                                <br><small class="text-muted">Click to expand</small>
+                                            </div>
+                                            <div class="value-full" style="display: none;">
+                                                <pre class="mb-0">{{ change.newValue }}</pre>
+                                                <small class="text-muted">Click to collapse</small>
+                                            </div>
+                                        {% else %}
+                                            <pre class="mb-0">{{ change.newValue }}</pre>
+                                        {% endif %}
+                                    </div>
+                                {% else %}
+                                    <span class="text-muted fst-italic">null</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if change.oldValue is null and change.newValue is not null %}
+                                    <span class="badge bg-success">Added</span>
+                                {% elseif change.oldValue is not null and change.newValue is null %}
+                                    <span class="badge bg-danger">Removed</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Modified</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="card mb-4">
+        <div class="card-body text-center py-5">
+            <i class="bi bi-info-circle" style="font-size: 3rem; opacity: 0.3;"></i>
+            <h5 class="mt-3 text-muted">No Field Changes</h5>
+            <p class="text-muted">This audit log does not contain any field changes.</p>
+        </div>
+    </div>
+{% endif %}
+
+<!-- Metadata -->
+{% if log.metadata is not empty %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="bi bi-tags"></i>
+                Metadata
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for key, value in log.metadata %}
+                    <div class="col-md-6 mb-3">
+                        <dt>{{ key|title|replace({'_': ' '}) }}:</dt>
+                        <dd>
+                            {% if value is iterable and value is not string %}
+                                <pre class="bg-light p-2 rounded">{{ value|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+                            {% else %}
+                                <code>{{ value }}</code>
+                            {% endif %}
+                        </dd>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<!-- Request Information -->
+{% if log.userAgent or log.ipAddress or log.requestUri or log.requestMethod %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="bi bi-globe"></i>
+                Request Information
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% if log.ipAddress %}
+                    <div class="col-md-6 mb-3">
+                        <dt>IP Address:</dt>
+                        <dd><code>{{ log.ipAddress }}</code></dd>
+                    </div>
+                {% endif %}
+                
+                {% if log.userAgent %}
+                    <div class="col-md-6 mb-3">
+                        <dt>User Agent:</dt>
+                        <dd>
+                            <div class="value-container">
+                                {% if log.userAgent|length > 80 %}
+                                    <div class="value-preview" onclick="toggleFullValue(this)">
+                                        {{ log.userAgent|slice(0, 80) }}...
+                                        <br><small class="text-muted">Click to expand</small>
+                                    </div>
+                                    <div class="value-full" style="display: none;">
+                                        <code>{{ log.userAgent }}</code>
+                                        <br><small class="text-muted">Click to collapse</small>
+                                    </div>
+                                {% else %}
+                                    <code>{{ log.userAgent }}</code>
+                                {% endif %}
+                            </div>
+                        </dd>
+                    </div>
+                {% endif %}
+                
+                {% if log.requestMethod %}
+                    <div class="col-md-6 mb-3">
+                        <dt>Request Method:</dt>
+                        <dd>
+                            <span class="badge bg-{{ log.requestMethod == 'GET' ? 'primary' : (log.requestMethod == 'POST' ? 'success' : 'warning') }}">
+                                {{ log.requestMethod }}
+                            </span>
+                        </dd>
+                    </div>
+                {% endif %}
+                
+                {% if log.requestUri %}
+                    <div class="col-md-6 mb-3">
+                        <dt>Request URI:</dt>
+                        <dd><code>{{ log.requestUri }}</code></dd>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<!-- Related Logs -->
+{% if related_logs is not empty %}
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="bi bi-link"></i>
+                Related Logs
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Operation</th>
+                            <th>User</th>
+                            <th>Date</th>
+                            <th>Changes</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for related in related_logs %}
+                        <tr class="{{ related.id == log.id ? 'table-primary' : '' }}">
+                            <td>
+                                {% if related.id == log.id %}
+                                    <span class="fw-bold">#{{ related.id }}</span>
+                                    <small class="text-muted">(current)</small>
+                                {% else %}
+                                    <a href="{{ path('audit_log_show', {id: related.id}) }}" class="fw-bold text-decoration-none">
+                                        #{{ related.id }}
+                                    </a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ related.operation == 'INSERT' ? 'success' : (related.operation == 'UPDATE' ? 'warning' : 'danger') }}">
+                                    {{ related.operation }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="fw-bold">{{ related.username ?: 'System' }}</div>
+                                {% if related.userId %}
+                                    <small class="text-muted">ID: {{ related.userId }}</small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span data-bs-toggle="tooltip" title="{{ related.createdAt|date('Y-m-d H:i:s') }}">
+                                    {{ related.createdAt|date('M j, H:i') }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if related.changes is not empty %}
+                                    <span class="badge bg-info">{{ related.changes|length }}</span>
+                                {% else %}
+                                    <span class="text-muted">0</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if related.id != log.id %}
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ path('audit_log_show', {id: related.id}) }}" 
+                                           class="btn btn-outline-primary btn-sm"
+                                           data-bs-toggle="tooltip" title="View Details">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-info btn-sm" 
+                                                onclick="compareLogs({{ log.id }}, {{ related.id }})"
+                                                data-bs-toggle="tooltip" title="Compare">
+                                            <i class="bi bi-arrow-left-right"></i>
+                                        </button>
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+// Value expansion/collapse
+function toggleFullValue(element) {
+    const container = element.closest('.value-container');
+    const preview = container.querySelector('.value-preview');
+    const full = container.querySelector('.value-full');
+    
+    if (preview.style.display === 'none') {
+        preview.style.display = 'block';
+        full.style.display = 'none';
+    } else {
+        preview.style.display = 'none';
+        full.style.display = 'block';
+    }
+}
+
+// Compare logs
+function compareLogs(logId1, logId2) {
+    const url = '{{ path("audit_log_compare", {id1: "__ID1__", id2: "__ID2__"}) }}'
+        .replace('__ID1__', logId1)
+        .replace('__ID2__', logId2);
+    
+    window.open(url, '_blank');
+}
+
+// Compare with previous
+function compareWithPrevious() {
+    {% if navigation and navigation.previous %}
+        compareLogs({{ navigation.previous.id }}, {{ log.id }});
+    {% else %}
+        AuditSystem.toast('No previous log available for comparison', 'warning');
+    {% endif %}
+}
+
+// Delete log
+function deleteLog(logId) {
+    AuditSystem.confirm('Are you sure you want to delete this audit log? This action cannot be undone.', function() {
+        AuditSystem.showLoading();
+        
+        fetch(`{{ path('audit_log_delete', {id: '__ID__'}) }}`.replace('__ID__', logId), {
+            method: 'DELETE',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-Token': '{{ csrf_token("delete_log") }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            AuditSystem.hideLoading();
+            
+            if (data.success) {
+                AuditSystem.toast('Audit log deleted successfully', 'success');
+                window.location.href = '{{ path("audit_log_index") }}';
+            } else {
+                AuditSystem.toast(data.message || 'Failed to delete audit log', 'error');
+            }
+        })
+        .catch(error => {
+            AuditSystem.hideLoading();
+            AuditSystem.toast('Failed to delete audit log', 'error');
+        });
+    });
+}
+</script>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+.value-container {
+    cursor: pointer;
+}
+
+.value-container .value-preview:hover {
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    padding: 2px 4px;
+}
+
+.old-value {
+    background-color: #fff5f5;
+    border-left: 3px solid #dc3545;
+    padding-left: 8px;
+}
+
+.new-value {
+    background-color: #f0fff4;
+    border-left: 3px solid #28a745;
+    padding-left: 8px;
+}
+
+pre {
+    font-size: 0.875rem;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.table-primary {
+    --bs-table-accent-bg: var(--bs-primary-bg-subtle);
+}
+</style>
+{% endblock %}

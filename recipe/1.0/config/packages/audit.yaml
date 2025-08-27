@@ -1,0 +1,47 @@
+audit:
+    # Enable/disable the audit system
+    enabled: '%env(bool:AUDIT_ENABLED)%'
+    
+    # Storage configuration
+    storage:
+        driver: '%env(AUDIT_STORAGE_DRIVER)%'
+        
+    # Logging configuration
+    logging:
+        level: '%env(AUDIT_LOG_LEVEL)%'
+        
+    # Default audit configuration
+    entities:
+        # Auto-discover entities with Auditable attribute
+        auto_discover: true
+        
+        # Default settings for audited entities
+        defaults:
+            track_created_at: true
+            track_updated_at: true
+            track_deleted_at: true
+            store_old_values: true
+            store_new_values: true
+            
+    # Web interface configuration
+    web_interface:
+        enabled: true
+        route_prefix: '/audit'
+        
+    # API configuration
+    api:
+        enabled: true
+        route_prefix: '/api/audit'
+        
+    # Security configuration
+    security:
+        # Roles required to access audit features
+        view_role: 'ROLE_ADMIN'
+        manage_role: 'ROLE_SUPER_ADMIN'
+        rollback_role: 'ROLE_SUPER_ADMIN'
+        
+    # Performance settings
+    performance:
+        batch_size: 100
+        cache_enabled: true
+        cache_ttl: 3600

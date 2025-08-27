@@ -1,0 +1,940 @@
+{% extends '@Audit/layout.html.twig' %}
+
+{% block title %}Configuration - Audit System{% endblock %}
+
+{% block breadcrumb_items %}
+    <li class="breadcrumb-item active">Configuration</li>
+{% endblock %}
+
+{% block page_title %}
+    Audit Configuration
+    <small class="text-muted">Manage audit settings and entity configurations</small>
+{% endblock %}
+
+{% block page_actions %}
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-primary" onclick="saveConfiguration()">
+                <i class="bi bi-check-lg"></i> Save Changes
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="resetConfiguration()">
+                <i class="bi bi-arrow-clockwise"></i> Reset
+            </button>
+        </div>
+        
+        <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-outline-primary" onclick="exportConfiguration()">
+                <i class="bi bi-download"></i> Export
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="importConfiguration()">
+                <i class="bi bi-upload"></i> Import
+            </button>
+        </div>
+        
+        <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-outline-info" onclick="testConfiguration()">
+                <i class="bi bi-play-circle"></i> Test
+            </button>
+            <a href="{{ path('audit_api_configuration_status') }}" class="btn btn-sm btn-outline-success" target="_blank">
+                <i class="bi bi-activity"></i> Status
+            </a>
+        </div>
+    </div>
+
+<!-- Modals -->
+<!-- Entity Configuration Modal -->
+<div class="modal fade" id="entityConfigModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Entity Configuration</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="entityConfigForm">
+                    <input type="hidden" id="entityConfigId" name="id">
+                    
+                    <div class="mb-3">
+                        <label for="entityClass" class="form-label">Entity Class</label>
+                        <input type="text" class="form-control" id="entityClass" name="entityClass" readonly>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="modalEnabled" name="enabled">
+                            <label class="form-check-label" for="modalEnabled">Enable Auditing</label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Operations to Track</label>
+                        <div class="btn-group" role="group">
+                            <input type="checkbox" class="btn-check" id="modalCreate" name="operations[]" value="create">
+                            <label class="btn btn-outline-primary" for="modalCreate">Create</label>
+                            
+                            <input type="checkbox" class="btn-check" id="modalUpdate" name="operations[]" value="update">
+                            <label class="btn btn-outline-primary" for="modalUpdate">Update</label>
+                            
+                            <input type="checkbox" class="btn-check" id="modalDelete" name="operations[]" value="delete">
+                            <label class="btn btn-outline-primary" for="modalDelete">Delete</label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="modalIgnoredFields" class="form-label">Ignored Fields</label>
+                        <textarea class="form-control" id="modalIgnoredFields" name="ignoredFields" rows="3" placeholder="field1, field2, field3"></textarea>
+                        <div class="form-text">Comma-separated list of field names to ignore</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveEntityConfig()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Import Configuration Modal -->
+<div class="modal fade" id="importModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Import Configuration</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="importForm" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="configFile" class="form-label">Configuration File</label>
+                        <input type="file" class="form-control" id="configFile" name="configFile" accept=".json,.yaml,.yml">
+                        <div class="form-text">Select a JSON or YAML configuration file</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="overwriteExisting" name="overwriteExisting">
+                            <label class="form-check-label" for="overwriteExisting">
+                                Overwrite existing configurations
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="importConfiguration()">Import</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+// Configuration management
+let currentEntityId = null;
+
+// Initialize page
+document.addEventListener('DOMContentLoaded', function() {
+    loadSystemStatus();
+    loadEntityConfigurations();
+    
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+
+// System status
+function loadSystemStatus() {
+    fetch('{{ path('audit_api_configuration_status') }}')
+        .then(response => response.json())
+        .then(data => {
+            updateStatusIndicator('auditEnabled', data.audit_enabled);
+            updateStatusIndicator('asyncProcessing', data.async_processing);
+            updateStatusIndicator('retentionEnabled', data.retention_enabled);
+            
+            document.getElementById('configuredEntities').textContent = data.configured_entities || 0;
+        })
+        .catch(error => {
+            console.error('Error loading system status:', error);
+            showToast('Error loading system status', 'error');
+        });
+}
+
+function updateStatusIndicator(elementId, status) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.className = `badge ${status ? 'bg-success' : 'bg-danger'}`;
+        element.textContent = status ? 'Enabled' : 'Disabled';
+    }
+}
+
+// Global configuration
+function saveGlobalConfig() {
+    const form = document.getElementById('globalConfigForm');
+    const formData = new FormData(form);
+    
+    // Convert FormData to JSON
+    const data = {};
+    for (let [key, value] of formData.entries()) {
+        if (form.elements[key].type === 'checkbox') {
+            data[key] = form.elements[key].checked;
+        } else if (form.elements[key].type === 'number') {
+            data[key] = parseInt(value);
+        } else {
+            data[key] = value;
+        }
+    }
+    
+    fetch('{{ path('audit_api_configuration_global') }}', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast('Global configuration saved successfully', 'success');
+            loadSystemStatus();
+        } else {
+            showToast('Error saving configuration: ' + (data.message || 'Unknown error'), 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error saving global configuration:', error);
+        showToast('Error saving global configuration', 'error');
+    });
+}
+
+function resetGlobalConfig() {
+    if (confirm('Are you sure you want to reset all global settings to defaults?')) {
+        fetch('{{ path('audit_api_configuration_global') }}', {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showToast('Configuration reset successfully', 'success');
+                location.reload();
+            } else {
+                showToast('Error resetting configuration: ' + (data.message || 'Unknown error'), 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error resetting configuration:', error);
+            showToast('Error resetting configuration', 'error');
+        });
+    }
+}
+
+// Entity configuration
+function loadEntityConfigurations() {
+    fetch('{{ path('audit_api_configuration_entities') }}')
+        .then(response => response.json())
+        .then(data => {
+            // Update entity table if needed
+            console.log('Entity configurations loaded:', data);
+        })
+        .catch(error => {
+            console.error('Error loading entity configurations:', error);
+        });
+}
+
+function toggleEntityAudit(entityId, enabled) {
+    fetch(`{{ path('audit_api_configuration_entities_show', {id: '__ID__'}) }}`.replace('__ID__', entityId), {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ enabled: enabled })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast(`Entity audit ${enabled ? 'enabled' : 'disabled'} successfully`, 'success');
+        } else {
+            showToast('Error updating entity configuration', 'error');
+            // Revert checkbox state
+            document.getElementById(`enabled_${entityId}`).checked = !enabled;
+        }
+    })
+    .catch(error => {
+        console.error('Error updating entity configuration:', error);
+        showToast('Error updating entity configuration', 'error');
+        // Revert checkbox state
+        document.getElementById(`enabled_${entityId}`).checked = !enabled;
+    });
+}
+
+function updateEntityOperations(entityId) {
+    const operations = [];
+    ['create', 'update', 'delete'].forEach(op => {
+        if (document.getElementById(`${op}_${entityId}`).checked) {
+            operations.push(op);
+        }
+    });
+    
+    fetch(`{{ path('audit_api_configuration_entities_show', {id: '__ID__'}) }}`.replace('__ID__', entityId), {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ operations: operations })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast('Entity operations updated successfully', 'success');
+        } else {
+            showToast('Error updating entity operations', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error updating entity operations:', error);
+        showToast('Error updating entity operations', 'error');
+    });
+}
+
+function editEntityConfig(entityId) {
+    currentEntityId = entityId;
+    
+    // Load entity configuration
+    fetch(`{{ path('audit_api_configuration_entities_show', {id: '__ID__'}) }}`.replace('__ID__', entityId))
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const config = data.data;
+                
+                // Populate modal form
+                document.getElementById('entityConfigId').value = config.id;
+                document.getElementById('entityClass').value = config.entityClass;
+                document.getElementById('modalEnabled').checked = config.enabled;
+                
+                // Set operations
+                ['create', 'update', 'delete'].forEach(op => {
+                    document.getElementById(`modal${op.charAt(0).toUpperCase() + op.slice(1)}`).checked = 
+                        config.operations.includes(op);
+                });
+                
+                // Set ignored fields
+                document.getElementById('modalIgnoredFields').value = config.ignoredFields.join(', ');
+                
+                // Show modal
+                new bootstrap.Modal(document.getElementById('entityConfigModal')).show();
+            } else {
+                showToast('Error loading entity configuration', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error loading entity configuration:', error);
+            showToast('Error loading entity configuration', 'error');
+        });
+}
+
+function saveEntityConfig() {
+    const form = document.getElementById('entityConfigForm');
+    const formData = new FormData(form);
+    
+    // Build operations array
+    const operations = [];
+    if (document.getElementById('modalCreate').checked) operations.push('create');
+    if (document.getElementById('modalUpdate').checked) operations.push('update');
+    if (document.getElementById('modalDelete').checked) operations.push('delete');
+    
+    // Build ignored fields array
+    const ignoredFields = document.getElementById('modalIgnoredFields').value
+        .split(',')
+        .map(field => field.trim())
+        .filter(field => field.length > 0);
+    
+    const data = {
+        enabled: document.getElementById('modalEnabled').checked,
+        operations: operations,
+        ignoredFields: ignoredFields
+    };
+    
+    fetch(`{{ path('audit_api_configuration_entities_show', {id: '__ID__'}) }}`.replace('__ID__', currentEntityId), {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast('Entity configuration saved successfully', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('entityConfigModal')).hide();
+            location.reload(); // Refresh to show updated data
+        } else {
+            showToast('Error saving entity configuration: ' + (data.message || 'Unknown error'), 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error saving entity configuration:', error);
+        showToast('Error saving entity configuration', 'error');
+    });
+}
+
+function deleteEntityConfig(entityId) {
+    if (confirm('Are you sure you want to delete this entity configuration?')) {
+        fetch(`{{ path('audit_api_configuration_entities_show', {id: '__ID__'}) }}`.replace('__ID__', entityId), {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showToast('Entity configuration deleted successfully', 'success');
+                location.reload();
+            } else {
+                showToast('Error deleting entity configuration', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting entity configuration:', error);
+            showToast('Error deleting entity configuration', 'error');
+        });
+    }
+}
+
+function scanEntities() {
+    showLoading('Scanning for entities...');
+    
+    fetch('{{ path('audit_api_configuration_entities') }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ action: 'scan' })
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        if (data.success) {
+            showToast(`Found ${data.count || 0} entities`, 'success');
+            location.reload();
+        } else {
+            showToast('Error scanning entities: ' + (data.message || 'Unknown error'), 'error');
+        }
+    })
+    .catch(error => {
+        hideLoading();
+        console.error('Error scanning entities:', error);
+        showToast('Error scanning entities', 'error');
+    });
+}
+
+// Bulk operations
+function bulkUpdateEntities() {
+    const selectedIds = Array.from(document.querySelectorAll('.entity-checkbox:checked'))
+        .map(cb => cb.value);
+    
+    if (selectedIds.length === 0) {
+        showToast('Please select at least one entity', 'warning');
+        return;
+    }
+    
+    const action = prompt('Enter action (enable/disable/delete):');
+    if (!action || !['enable', 'disable', 'delete'].includes(action)) {
+        showToast('Invalid action', 'error');
+        return;
+    }
+    
+    if (action === 'delete' && !confirm(`Are you sure you want to delete ${selectedIds.length} entity configurations?`)) {
+        return;
+    }
+    
+    fetch('{{ path('audit_api_configuration_entities_bulk') }}', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            ids: selectedIds,
+            action: action
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast(`Bulk ${action} completed successfully`, 'success');
+            location.reload();
+        } else {
+            showToast('Error performing bulk operation: ' + (data.message || 'Unknown error'), 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error performing bulk operation:', error);
+        showToast('Error performing bulk operation', 'error');
+    });
+}
+
+// Import/Export
+function exportConfiguration() {
+    const format = prompt('Enter format (json/yaml):', 'json');
+    if (!format || !['json', 'yaml'].includes(format)) {
+        showToast('Invalid format', 'error');
+        return;
+    }
+    
+    window.open(`{{ path('audit_api_configuration_export') }}?format=${format}`, '_blank');
+}
+
+function importConfiguration() {
+    const form = document.getElementById('importForm');
+    const formData = new FormData(form);
+    
+    if (!formData.get('configFile')) {
+        showToast('Please select a configuration file', 'warning');
+        return;
+    }
+    
+    fetch('{{ path('audit_api_configuration_import') }}', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast('Configuration imported successfully', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('importModal')).hide();
+            location.reload();
+        } else {
+            showToast('Error importing configuration: ' + (data.message || 'Unknown error'), 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error importing configuration:', error);
+        showToast('Error importing configuration', 'error');
+    });
+}
+
+// Test configuration
+function testConfiguration() {
+    showLoading('Testing configuration...');
+    
+    fetch('{{ path('audit_api_configuration_status') }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ action: 'test' })
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        if (data.success) {
+            showToast('Configuration test passed', 'success');
+        } else {
+            showToast('Configuration test failed: ' + (data.message || 'Unknown error'), 'error');
+        }
+    })
+    .catch(error => {
+        hideLoading();
+        console.error('Error testing configuration:', error);
+        showToast('Error testing configuration', 'error');
+    });
+}
+
+// Utility functions
+function selectAllEntities() {
+    const checkboxes = document.querySelectorAll('.entity-checkbox');
+    const selectAll = document.getElementById('selectAllEntities');
+    
+    checkboxes.forEach(cb => {
+        cb.checked = selectAll.checked;
+    });
+}
+
+function editIgnoredFields(entityId) {
+    editEntityConfig(entityId);
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- Configuration Status -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-info-circle"></i>
+                    System Status
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="d-flex align-items-center">
+                            <div class="status-indicator me-2" id="audit-status">
+                                <i class="bi bi-circle-fill text-{{ audit_config.enabled ? 'success' : 'danger' }}"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">Audit System</div>
+                                <small class="text-muted">{{ audit_config.enabled ? 'Enabled' : 'Disabled' }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="d-flex align-items-center">
+                            <div class="status-indicator me-2">
+                                <i class="bi bi-circle-fill text-{{ audit_config.asyncProcessing ? 'info' : 'warning' }}"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">Processing</div>
+                                <small class="text-muted">{{ audit_config.asyncProcessing ? 'Async' : 'Sync' }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="d-flex align-items-center">
+                            <div class="status-indicator me-2">
+                                <i class="bi bi-circle-fill text-{{ audit_config.retentionDays > 0 ? 'success' : 'warning' }}"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">Retention</div>
+                                <small class="text-muted">{{ audit_config.retentionDays > 0 ? audit_config.retentionDays ~ ' days' : 'Unlimited' }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="d-flex align-items-center">
+                            <div class="status-indicator me-2">
+                                <i class="bi bi-circle-fill text-{{ entity_configs|length > 0 ? 'success' : 'warning' }}"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">Entities</div>
+                                <small class="text-muted">{{ entity_configs|length }} configured</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Configuration Tabs -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs" id="configTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="global-tab" data-bs-toggle="tab" data-bs-target="#global" type="button" role="tab">
+                            <i class="bi bi-gear"></i> Global Settings
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="entities-tab" data-bs-toggle="tab" data-bs-target="#entities" type="button" role="tab">
+                            <i class="bi bi-collection"></i> Entity Configuration
+                            <span class="badge bg-primary ms-1">{{ entity_configs|length }}</span>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="advanced-tab" data-bs-toggle="tab" data-bs-target="#advanced" type="button" role="tab">
+                            <i class="bi bi-sliders"></i> Advanced
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="card-body">
+                <div class="tab-content" id="configTabsContent">
+                    <!-- Global Settings Tab -->
+                    <div class="tab-pane fade show active" id="global" role="tabpanel">
+                        <form id="globalConfigForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="fw-bold mb-3">Basic Settings</h6>
+                                    
+                                    <div class="mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="auditEnabled" name="enabled" {{ audit_config.enabled ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="auditEnabled">
+                                                <strong>Enable Audit System</strong>
+                                                <br>
+                                                <small class="text-muted">Turn on/off the entire audit system</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="asyncProcessing" name="asyncProcessing" {{ audit_config.asyncProcessing ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="asyncProcessing">
+                                                <strong>Async Processing</strong>
+                                                <br>
+                                                <small class="text-muted">Process audit logs asynchronously for better performance</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="trackUserInfo" name="trackUserInfo" {{ audit_config.trackUserInfo ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="trackUserInfo">
+                                                <strong>Track User Information</strong>
+                                                <br>
+                                                <small class="text-muted">Include user details in audit logs</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="trackRequestInfo" name="trackRequestInfo" {{ audit_config.trackRequestInfo ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="trackRequestInfo">
+                                                <strong>Track Request Information</strong>
+                                                <br>
+                                                <small class="text-muted">Include HTTP request details in audit logs</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <h6 class="fw-bold mb-3">Data Management</h6>
+                                    
+                                    <div class="mb-3">
+                                        <label for="retentionDays" class="form-label">
+                                            <strong>Retention Period (days)</strong>
+                                        </label>
+                                        <input type="number" class="form-control" id="retentionDays" name="retentionDays" value="{{ audit_config.retentionDays }}" min="0" max="3650">
+                                        <div class="form-text">Set to 0 for unlimited retention</div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="maxLogSize" class="form-label">
+                                            <strong>Max Log Size (MB)</strong>
+                                        </label>
+                                        <input type="number" class="form-control" id="maxLogSize" name="maxLogSize" value="{{ audit_config.maxLogSize }}" min="1" max="1000">
+                                        <div class="form-text">Maximum size for individual audit log entries</div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="batchSize" class="form-label">
+                                            <strong>Batch Size</strong>
+                                        </label>
+                                        <input type="number" class="form-control" id="batchSize" name="batchSize" value="{{ audit_config.batchSize }}" min="1" max="1000">
+                                        <div class="form-text">Number of logs to process in each batch</div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="compressLogs" name="compressLogs" {{ audit_config.compressLogs ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="compressLogs">
+                                                <strong>Compress Logs</strong>
+                                                <br>
+                                                <small class="text-muted">Compress audit logs to save storage space</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Entity Configuration Tab -->
+                    <div class="tab-pane fade" id="entities" role="tabpanel">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold mb-0">Entity Audit Configuration</h6>
+                            <div class="btn-group btn-group-sm">
+                                <button type="button" class="btn btn-outline-primary" onclick="addEntityConfig()">
+                                    <i class="bi bi-plus-lg"></i> Add Entity
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="bulkUpdateEntities()">
+                                    <i class="bi bi-gear"></i> Bulk Update
+                                </button>
+                                <button type="button" class="btn btn-outline-info" onclick="scanEntities()">
+                                    <i class="bi bi-search"></i> Scan
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="entityConfigTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width: 5%;">
+                                            <input type="checkbox" class="form-check-input" id="selectAllEntities" onchange="toggleAllEntitySelection()">
+                                        </th>
+                                        <th style="width: 25%;">Entity Class</th>
+                                        <th style="width: 15%;">Status</th>
+                                        <th style="width: 20%;">Operations</th>
+                                        <th style="width: 15%;">Ignored Fields</th>
+                                        <th style="width: 10%;">Logs Count</th>
+                                        <th style="width: 10%;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for entity_config in entity_configs %}
+                                        <tr data-entity-id="{{ entity_config.id }}">
+                                            <td>
+                                                <input type="checkbox" class="form-check-input entity-checkbox" value="{{ entity_config.id }}">
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div>
+                                                        <strong>{{ entity_config.entityClass|split('\\')|last }}</strong>
+                                                        <br>
+                                                        <small class="text-muted">{{ entity_config.entityClass }}</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="enabled_{{ entity_config.id }}" {{ entity_config.enabled ? 'checked' : '' }} onchange="toggleEntityAudit({{ entity_config.id }}, this.checked)">
+                                                    <label class="form-check-label" for="enabled_{{ entity_config.id }}">
+                                                        {{ entity_config.enabled ? 'Enabled' : 'Disabled' }}
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm">
+                                                    {% for operation in ['create', 'update', 'delete'] %}
+                                                        <input type="checkbox" class="btn-check" id="{{ operation }}_{{ entity_config.id }}" {{ operation in entity_config.operations ? 'checked' : '' }} onchange="updateEntityOperations({{ entity_config.id }})">
+                                                        <label class="btn btn-outline-secondary" for="{{ operation }}_{{ entity_config.id }}">{{ operation|title }}</label>
+                                                    {% endfor %}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <span class="badge bg-secondary me-2">{{ entity_config.ignoredFields|length }}</span>
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="editIgnoredFields({{ entity_config.id }})">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-info">{{ entity_config.logsCount ?? 0 }}</span>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm">
+                                                    <button type="button" class="btn btn-outline-primary" onclick="editEntityConfig({{ entity_config.id }})">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-danger" onclick="deleteEntityConfig({{ entity_config.id }})">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted py-4">
+                                                <i class="bi bi-collection display-6 d-block mb-2"></i>
+                                                No entity configurations found.
+                                                <br>
+                                                <button type="button" class="btn btn-primary mt-2" onclick="scanEntities()">
+                                                    <i class="bi bi-search"></i> Scan for Entities
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced Tab -->
+                    <div class="tab-pane fade" id="advanced" role="tabpanel">
+                        <form id="advancedConfigForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="fw-bold mb-3">Performance Settings</h6>
+                                    
+                                    <div class="mb-3">
+                                        <label for="queueDriver" class="form-label">
+                                            <strong>Queue Driver</strong>
+                                        </label>
+                                        <select class="form-select" id="queueDriver" name="queueDriver">
+                                            <option value="sync" {{ audit_config.queueDriver == 'sync' ? 'selected' : '' }}>Synchronous</option>
+                                            <option value="database" {{ audit_config.queueDriver == 'database' ? 'selected' : '' }}>Database</option>
+                                            <option value="redis" {{ audit_config.queueDriver == 'redis' ? 'selected' : '' }}>Redis</option>
+                                            <option value="rabbitmq" {{ audit_config.queueDriver == 'rabbitmq' ? 'selected' : '' }}>RabbitMQ</option>
+                                        </select>
+                                        <div class="form-text">Choose the queue driver for async processing</div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="cacheDriver" class="form-label">
+                                            <strong>Cache Driver</strong>
+                                        </label>
+                                        <select class="form-select" id="cacheDriver" name="cacheDriver">
+                                            <option value="array" {{ audit_config.cacheDriver == 'array' ? 'selected' : '' }}>Array (No Cache)</option>
+                                            <option value="filesystem" {{ audit_config.cacheDriver == 'filesystem' ? 'selected' : '' }}>Filesystem</option>
+                                            <option value="redis" {{ audit_config.cacheDriver == 'redis' ? 'selected' : '' }}>Redis</option>
+                                            <option value="memcached" {{ audit_config.cacheDriver == 'memcached' ? 'selected' : '' }}>Memcached</option>
+                                        </select>
+                                        <div class="form-text">Choose the cache driver for audit metadata</div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="connectionPool" class="form-label">
+                                            <strong>Database Connection Pool</strong>
+                                        </label>
+                                        <input type="number" class="form-control" id="connectionPool" name="connectionPool" value="{{ audit_config.connectionPool ?? 10 }}" min="1" max="100">
+                                        <div class="form-text">Maximum number of database connections</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <h6 class="fw-bold mb-3">Security & Privacy</h6>
+                                    
+                                    <div class="mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="encryptSensitiveData" name="encryptSensitiveData" {{ audit_config.encryptSensitiveData ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="encryptSensitiveData">
+                                                <strong>Encrypt Sensitive Data</strong>
+                                                <br>
+                                                <small class="text-muted">Encrypt sensitive field values in audit logs</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="anonymizeUsers" name="anonymizeUsers" {{ audit_config.anonymizeUsers ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="anonymizeUsers">
+                                                <strong>Anonymize User Data</strong>
+                                                <br>
+                                                <small class="text-muted">Replace user identifiers with anonymous IDs</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="sensitiveFields" class="form-label">
+                                            <strong>Global Sensitive Fields</strong>
+                                        </label>
+                                        <textarea class="form-control" id="sensitiveFields" name="sensitiveFields" rows="3" placeholder="password, ssn, credit_card, etc.">{{ audit_config.sensitiveFields|join(', ') }}</textarea>
+                                        <div class="form-text">Comma-separated list of field names to treat as sensitive</div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="ipWhitelist" class="form-label">
+                                            <strong>IP Whitelist</strong>
+                                        </label>
+                                        <textarea class="form-control" id="ipWhitelist" name="ipWhitelist" rows="3" placeholder="192.168.1.0/24, 10.0.0.0/8">{{ audit_config.ipWhitelist|join(', ') }}</textarea>
+                                        <div class="form-text">Comma-separated list of IP ranges to allow audit access</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

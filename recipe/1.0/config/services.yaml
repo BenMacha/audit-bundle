@@ -1,0 +1,46 @@
+# This file is auto-generated during the composer install
+services:
+    # Default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # Makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    BenMacha\AuditBundle\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Tests/'
+
+    # Controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    BenMacha\AuditBundle\Controller\:
+        resource: '../src/Controller/'
+        tags: ['controller.service_arguments']
+
+    # Audit Event Listener
+    BenMacha\AuditBundle\EventListener\AuditEventListener:
+        tags:
+            - { name: doctrine.event_listener, event: preUpdate }
+            - { name: doctrine.event_listener, event: postPersist }
+            - { name: doctrine.event_listener, event: preRemove }
+            - { name: doctrine.event_listener, event: postRemove }
+
+    # Audit Manager Service
+    BenMacha\AuditBundle\Service\AuditManager:
+        public: true
+
+    # Configuration Service
+    BenMacha\AuditBundle\Service\ConfigurationService:
+        public: true
+
+    # Rollback Service
+    BenMacha\AuditBundle\Service\RollbackService:
+        public: true
+
+    # Metadata Collector
+    BenMacha\AuditBundle\Service\MetadataCollector:
+        public: true

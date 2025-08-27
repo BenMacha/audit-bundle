@@ -1,0 +1,10 @@
+# Audit Bundle Routes
+audit_web:
+    resource: '@AuditBundle/Resources/config/routes/web.yaml'
+    prefix: '%audit.web_interface.route_prefix%'
+    condition: '%audit.web_interface.enabled%'
+
+audit_api:
+    resource: '@AuditBundle/Resources/config/routes/api.yaml'
+    prefix: '%audit.api.route_prefix%'
+    condition: '%audit.api.enabled%'
